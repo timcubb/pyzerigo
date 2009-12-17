@@ -1,0 +1,555 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+
+
+
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="description" content="High-performance VPS servers, Managed DNS services, and server monitoring tools for your most demanding applications...">
+    <meta name="keywords" content="VPS hosting, VPS servers, virtual server hosting, virutal private servers, web hosting, managed DNS hosting, DNS hosting, managed DNS services, DNS services, DNS tools, domain monitoring, cloud computing, cloud servers, linux hosting, ubuntu hosting, debian hosting, centos hosting, fedora hosting, fedora core hosting, pods, watchdog, hosting services, iaas, saas, grid computing">
+  <title>REST API v1.1 (current) | Zerigo DNS | Support | Zerigo</title>
+  <link href="api_11_files/black_packaged.css" media="all" rel="stylesheet" type="text/css">
+  <script src="api_11_files/base_packaged.js" type="text/javascript"></script>
+  
+</head><body>
+  <div class="container">
+    <div class="header">
+      <div class="right-links">
+        <ul>
+          <li><a href="http://www.zerigo.com/">Home</a></li>
+<li><a href="http://www.zerigo.com/services">Services</a></li>
+<li><a href="http://www.zerigo.com/support">Support</a></li>
+<li><a href="http://www.zerigo.com/blog">Blog</a></li>
+<li><a href="http://www.zerigo.com/contact">Contact Us</a></li>
+<li><a href="http://www.zerigo.com/accounts">Manage Account</a></li>
+        </ul>	    
+      </div>
+
+      <h1><a href="http://www.zerigo.com/">Zerigo</a></h1>
+    </div>
+    <div class="header2">
+      
+        
+        
+      
+    </div>
+    <div class="tab-content">
+      
+      
+		  
+		
+      
+      
+      
+      
+
+<div class="header-blog">
+  <ul><li><a href="http://www.zerigo.com/docs/general">Accounts/Billing</a></li>
+<li><a href="http://www.zerigo.com/docs/managed-dns">DNS</a></li>
+<li><a href="http://www.zerigo.com/docs/vps-servers">Servers</a></li>
+<li><a href="http://www.zerigo.com/docs/watchdog">Watchdog</a></li></ul>
+  <h2>Support - Zerigo DNS</h2>
+</div>
+<div class="light-content">
+
+<h3>REST API v1.1 (current)</h3>
+
+<p>Zerigo DNS supports a fairly standard REST API for full creation,
+modification, and deletion of domain (zone) and host records. It is
+easy and straightforward to work with.</p>
+
+<p>Note that in the context of the API, domains are always referred to
+as zones. Additionally note that current API support is for standard
+domains and their hosts, not domain templates and their hosts. If you
+need API support for templates, email support.</p>
+
+<h4>API status</h4>
+<p>This is the current version of the API. All new development should
+use this version. Additionally, users of an older version of the API
+should plan to upgrade to the latest version. See the documentation for
+the older versions for sunset dates.</p>
+
+<h4>REST API Basics</h4>
+
+<p>REST runs on top of HTTP. It uses standard GET, POST, PUT, and
+DELETE methods for HTTP along with XML document bodies. Authentication
+is sent as an HTTP basic auth header.</p>
+
+<h4>Authentication</h4>
+
+<p>Authentication for all API requests is done via a standard Basic
+HTTP Auth header. The username is your email address and the password
+is the dynamic update token available in <i>Manage Account -&gt; DNS -&gt; Preferences</i>. You must enable dynamic updates to use the API.</p>
+
+<h4>Content types</h4>
+
+<p>A Content-Type header is required for all POST or PUT requests. If your content is sent as XML (recommended), you must send <code>Content-Type: application/xml</code>. All examples within our documentation are XML and must use the <code>application/xml</code> mime-type. A Content-Type header must not be sent with GET or DELETE requests.</p>
+
+<p>You may also send standard web-form content with the <code>application/x-www-form-urlencoded</code> mime-type. Parameters should be translated like this: <code>&lt;zone&gt;&lt;domain&gt;example.com&lt;/domain&gt;&lt;ns-type&gt;pri_sec&lt;/ns-type&gt;&lt;/zone&gt;</code> becomes <code>zone[domain]=example.com&amp;zone[ns_type]=pri_sec</code>.
+Note that ns-type became ns_type. The rule is this: use hyphens for XML
+node names and use underscores for web-form content or URL query
+parameters.</p>
+
+<p>If your HTTP client cannot sent PUT and DELETE verbs, you may
+substitute the parameter _method=put along with a POST request. This
+only works for web-form content and the _method parameter must be in
+the POST body, not in the query string. It is recommended that you use
+an HTTP client capable of using PUT and DELETE verbs.</p>
+
+<h4>API URL</h4>
+
+<p>The URL path for every API call begins with 
+<code>http://ns.zerigo.com/api/1.1/</code> .
+
+
+</p><h4>Listing All Zones</h4>
+
+<p>Request: GET /api/1.1/zones.xml</p>
+
+<p>There are two optional parameters: page=# and per_page=#. page
+defaults to 1 (and starts at 1, not 0). per_page defaults to 100 but
+should be specified exactly if a change of the default value will cause
+your application to fail. The maximum value for per_page is 1000.
+Example:</p>
+
+<p>GET /api/1.1/zones.xml?per_page=25&amp;page=2</p>
+
+
+<p>Response Header:</p>
+<pre>X-Query-Count: 12
+</pre>
+
+<p>Response Body:</p>
+<pre>&lt;zones type="array"&gt;
+  &lt;zone&gt;
+    &lt;created-at type="datetime"&gt;2008-12-07T02:40:02Z&lt;/created-at&gt;
+    &lt;custom-nameservers nil="true"/&gt;
+    &lt;custom-ns type="boolean"&gt;false&lt;/custom-ns&gt; 
+    &lt;default-ttl type="integer"&gt;600&lt;/default-ttl&gt;
+    &lt;domain&gt;example.com&lt;/domain&gt;
+    &lt;hostmaster nil="true"/&gt; 
+    &lt;id type="integer"&gt;959&lt;/id&gt;
+    &lt;ns1 nil="true"/&gt;
+    &lt;ns2 nil="true"/&gt;
+    &lt;ns3 nil="true"/&gt;
+    &lt;ns-type&gt;pri_sec&lt;/ns-type&gt;
+    &lt;nx-ttl nil="true"/&gt; 
+    &lt;slave-nameservers nil="true"/&gt;
+    &lt;updated-at type="datetime"&gt;2008-12-07T02:40:02Z&lt;/updated-at&gt;
+  &lt;/zone&gt;
+&lt;/zones&gt;
+</pre>
+
+<p>X-Query-Count will contain the total number of results, including those that didn't fit inside this response. For example,
+  if there are 12 results and per_page (above) is 10, only 10 entries will be returned but X-Query-Count will show 12 so that
+  you know there are more results remaining.
+</p>
+
+<p>default-ttl is in seconds.</p>
+<p>ns-type has three valid values: 'pri_sec', 'pri', and 'sec'. They
+are: Standard service (normal), Standard service with Master support,
+and Slave only service respectively.</p>
+<p>The value of ns-type will determine whether ns1 or slave-nameservers
+are used. If ns-type is 'pri', then slave-nameservers should be used to
+provide a comma-separated list of slave nameservers (eg:
+"ns1.some-slave.com,ns2.some-slave.com"). If ns-type is 'sec', then ns1
+is used to designate the master nameserver. Both ns1 and
+slave-nameservers should be left blank when using the 'pri-sec' service.</p>
+<p>ns2 and ns3 (along with ns1, which had dual-use) used to hold the
+slave nameservers for 'pri' service. ns2 and ns3 are now fully
+deprecated and should no longer be used or even included in any POST OR
+PUT requests. They will be removed in the next version of the API. For
+backwards compatibility in this version, when ns-type is 'pri', ns1,
+ns2, and ns3 will contain the first 3 values from slave-nameservers.</p>
+<p>custom-ns indicated if custom (vanity) nameservers are enabled for
+this domain. Only allowed if the account's service plan support custom
+nameservers.</p>
+<p>custom-nameservers is a comma-separated list of custom nameservers.
+If nil, the domain will use Zerigo's default list of servers. Only
+valid for domains with custom-ns enabled.</p>
+<p>hostmaster is the email of the DNS administrator or hostmaster. A
+nil value will default to Zerigo's hostmaster address. Note that this
+is publicly visible in the domain records. Only valid for domains with
+custom-ns enabled.</p>
+
+
+
+<h4>Counting All Zones</h4>
+
+<p>Request: GET /api/1.1/zones/count.xml</p>
+
+<p>Response:</p>
+<pre>&lt;count&gt;12&lt;/count&gt;
+</pre>
+
+<p>This is the total number of zones available. It is the same result as provided in the X-Query-Count header above.</p>
+
+
+<h4>Listing a Specific Zone</h4>
+
+<p>Request: GET /api/1.1/zones/[zone_id].xml</p>
+
+<p>Alternate: GET /api/1.1/zones/example.com.xml (to retrieve the record for example.com)</p>
+
+<p>Response:</p>
+<pre>&lt;zone&gt;
+  &lt;created-at type="datetime"&gt;2008-12-07T02:40:02Z&lt;/created-at&gt;
+  &lt;custom-nameservers&gt;ns1.example.com,ns2.example.com&lt;/custom-nameservers&gt;
+  &lt;custom-ns type="boolean"&gt;true&lt;/custom-ns&gt; 
+  &lt;default-ttl type="integer"&gt;600&lt;/default-ttl&gt;
+  &lt;domain&gt;example.com&lt;/domain&gt;
+  &lt;hostmaster&gt;dnsadmin@example.com&lt;/hostmaster&gt; 
+  &lt;id type="integer"&gt;959&lt;/id&gt;
+  &lt;ns1 nil="true"/&gt;
+  &lt;ns2 nil="true"/&gt;
+  &lt;ns3 nil="true"/&gt;
+  &lt;ns-type&gt;pri_sec&lt;/ns-type&gt;
+  &lt;nx-ttl nil="true"&gt;&lt;/nx-ttl&gt;
+  &lt;slave-nameservers nil="true"/&gt;
+  &lt;updated-at type="datetime"&gt;2008-12-07T02:40:02Z&lt;/updated-at&gt;
+  &lt;hosts-count&gt;1&lt;/hosts-count&gt;
+  &lt;hosts type="array"&gt;
+    &lt;host&gt;
+      &lt;created-at type="datetime"&gt;2008-12-07T02:51:13Z&lt;/created-at&gt;
+      &lt;data&gt;172.16.16.1&lt;/data&gt;
+      &lt;fqdn&gt;example.com&lt;/fqdn&gt;
+      &lt;host-type&gt;A&lt;/host-type&gt;
+      &lt;hostname nil="true"/&gt;
+      &lt;id type="integer"&gt;2499&lt;/id&gt;
+      &lt;priority type="integer" nil="true"/&gt;
+      &lt;ttl type="integer" nil="true"/&gt;
+      &lt;updated-at type="datetime"&gt;2008-12-07T02:51:13Z&lt;/updated-at&gt;
+      &lt;zone-id type="integer"&gt;959&lt;/zone-id&gt;
+    &lt;/host&gt;
+  &lt;/hosts&gt;
+&lt;/zone&gt;
+</pre>
+
+<p>This response is similar to Listing All Zones, with the addition of
+hosts-count and possibly hosts. As long as there are no more than 300
+hosts, they will be returned. If there are more, the hosts array will
+be left out. hosts-count will always be returned. Information on the
+fields for the hosts are below under Listing All Hosts for a Zone.</p>
+
+
+<h4>Getting a Blank Zone</h4>
+
+<p>Request: GET /api/1.1/zones/new.xml</p>
+
+<p>Response:</p>
+<pre>&lt;zone&gt;
+  &lt;custom-ns type="boolean"&gt;false&lt;/custom-ns&gt;
+  &lt;default-ttl type="integer"&gt;600&lt;/default-ttl&gt;
+  &lt;domain nil="true"/&gt;
+  &lt;ns1 nil="true"/&gt;
+  &lt;ns-type&gt;pri_sec&lt;/ns-type&gt;
+  &lt;nx-ttl nil="true"/&gt; 
+  &lt;slave-nameservers nil="true"/&gt;
+&lt;/zone&gt;
+</pre>
+
+<p>This response may be useful to obtain a blank zone, suitable for use
+as a template or retrieving default values for included fields.</p>
+
+
+<h4>Creating a New Zone</h4>
+
+<p>Request: POST /api/1.1/zones.xml</p>
+<pre>&lt;zone&gt;
+  &lt;default-ttl type="integer"&gt;600&lt;/default-ttl&gt;
+  &lt;domain&gt;example.com&lt;/domain&gt;
+  &lt;ns1 nil="true"/&gt;
+  &lt;ns2 nil="true"/&gt;
+  &lt;ns3 nil="true"/&gt;
+  &lt;ns-type&gt;pri_sec&lt;/ns-type&gt;
+  &lt;nx-ttl type="integer"&gt;900&lt;/nx-ttl&gt; 
+  &lt;slave-nameservers nil="true"/&gt;
+&lt;/zone&gt;
+</pre>
+
+<p>Response: If successful, a copy of the new zone along with an HTTP
+201 Created status. If unsuccessful, an HTTP 422 Unprocessable Entity
+status and a list of errors:</p>
+<pre>&lt;errors&gt;
+  &lt;error&gt;Domain is invalid&lt;/error&gt;
+  &lt;error&gt;Domain is too short (minimum is 4 characters)&lt;/error&gt;
+&lt;/errors&gt;
+
+</pre>
+
+<p>ns1 should be left out unless ns-type is 'sec'. slave-nameservers
+should be left out unless ns-type is 'pri'. See more details under
+Listing All Zones.</p>
+
+
+<h4>Updating an Existing Zone</h4>
+
+<p>Request: PUT /api/1.1/zones/[zone_id].xml</p>
+<pre>&lt;zone&gt;
+  &lt;default-ttl type="integer"&gt;600&lt;/default-ttl&gt;
+  &lt;domain&gt;example.com&lt;/domain&gt;
+  &lt;ns1 nil="true"/&gt;
+  &lt;ns-type&gt;pri_sec&lt;/ns-type&gt;
+  &lt;slave-nameservers nil="true"/&gt;
+&lt;/zone&gt;
+</pre>
+
+<p>ns1 should be left out unless ns-type is 'sec'. slave-nameservers
+should be left out unless ns-type is 'pri'. See more details under
+Listing All Zones.</p>
+
+<p>Response: If successful, simply an HTTP 200 OK status. If
+unsuccessful, an HTTP 422 Unprocessable Entity status and a list of
+errors:</p>
+<pre>&lt;errors&gt;
+  &lt;error&gt;Domain is invalid&lt;/error&gt;
+  &lt;error&gt;Domain is too short (minimum is 4 characters)&lt;/error&gt;
+&lt;/errors&gt;
+
+</pre>
+
+
+<h4>Deleting a Zone</h4>
+
+<p>Request: DELETE /api/1.1/zones/[zone_id].xml</p>
+
+<p>Response: If successful, an HTTP 200 OK status.</p>
+
+
+
+
+<h4>Listing All Hosts</h4>
+
+<p>Request: GET /api/1.1/zones/[zone_id]/hosts.xml</p>
+<p>Alternate: GET /api/1.1/hosts.xml?zone_id=#</p>
+
+<p>There are two optional parameters: page=# and per_page=#. page
+defaults to 1 (and starts at 1, not 0). per_page defaults to 100 but
+should be specified exactly if a change of the default value will cause
+your application to fail. The maximum value for per_page is 1000.
+Example:</p>
+
+<p>GET /api/1.1/zones/[zone_id]/hosts.xml?per_page=25&amp;page=2</p>
+
+<p>It is possible to search by hostname to limit the result set.
+Searches are based on the FQDN (fully qualified domain name) which is
+the combination of the hostname (if any) and the zone/domain name. An
+example search request would be:</p>
+
+<p>GET /api/1.1/zones/[zone_id]/hosts.xml?fqdn=www.example.com</p>
+
+<p>This example would return all host records, regardless of host-type,
+with a hostname of 'www' attached to [zone_id]. Note that the
+referenced zone's domain must be 'example.com'. If the parameter was
+fqdn=example.com, it would search for a hostname of nil.</p>
+
+<p>Lastly, because the zone_id may not always be known, it is possible
+to skip it when using the fqdn parameter. The zone id will be returned
+in the response. Example:</p>
+
+<p>GET /api/1.1/hosts.xml?fqdn=www.example.com</p>
+
+
+<p>Response Header:</p>
+<pre>X-Query-Count: 4
+</pre>
+
+<p>Response Body:</p>
+<pre>&lt;hosts type="array"&gt;
+  &lt;host&gt;
+    &lt;created-at type="datetime"&gt;2008-12-07T02:51:13Z&lt;/created-at&gt;
+    &lt;data&gt;172.16.16.1&lt;/data&gt;
+    &lt;fqdn&gt;example.com&lt;/fqdn&gt;
+    &lt;host-type&gt;A&lt;/host-type&gt;
+    &lt;hostname nil="true"/&gt;
+    &lt;id type="integer"&gt;2499&lt;/id&gt;
+    &lt;priority type="integer" nil="true"/&gt;
+    &lt;ttl type="integer" nil="true"/&gt;
+    &lt;updated-at type="datetime"&gt;2008-12-07T02:51:13Z&lt;/updated-at&gt;
+    &lt;zone-id type="integer"&gt;959&lt;/zone-id&gt;
+  &lt;/host&gt;
+&lt;/hosts&gt;
+</pre>
+
+<p>X-Query-Count will contain the total number of results, including those that didn't fit inside this response. For example,
+  if there are 12 results and per_page (above) is 10, only 10 entries will be returned but X-Query-Count will show 12 so that
+  you know there are more results remaining.
+</p>
+
+<p>This is very similar to the response given in Listing a Specific
+Zone except that it's only the hosts information, excluding the zone
+fields.</p>
+
+<p>hostname is any part of a domain in front of the domain itself. For
+example, for a fully qualified domain name of 'www.example.com', where
+the zone domain is 'example.com', the hostname would be 'www'. If there
+isn't any hostname in front of the domain name, this should be set as
+nil or left out.</p>
+<p>host-type is the type of host record. Valid values are A, AAAA,
+CNAME, MX, NS, SRV, and TXT. Note that NS is only for delegating DNS
+for subdomains; non-subdomain NS records cannot be set this way. For
+reverse domains, the only valid value is PTR.</p>
+<p>host-type should be 'A' to set an Address record. This points a full
+hostname (www.example.com) to a specific IP address (172.16.16.1) which
+should be in the data field.</p>
+<p>host-type should be 'MX' to set a Mail eXchange record. This
+indicates where email for a full hostname (www.example.com) should be
+delivered -- by using a hostname in the data field (mail.example.com).
+Also see the priority field below.</p>
+<p>host-type should be 'CNAME' to create a Canonical Name record. This
+points one hostname as an alias to another which should be entered as a
+hostname in the data field (othername.example.com).</p>
+<p>host-type should be 'TXT' to configure a text record. The text
+itself should be entered in the data field. A common use of this is
+setting an SPF record for a domain.</p>
+<p>priority indicates the relative priority of two or more MX records.
+For example, this may be set to 10 for a primary mail server and 20 for
+a backup server.</p>
+<p>ttl is in seconds. If it is nil, the record uses the default-ttl value from the zone.</p>
+
+
+<h4>Counting All Hosts</h4>
+
+<p>Request: GET /api/1.1/zones/[zone_id]/hosts/count.xml</p>
+<p>Alternate: GET /api/1.1/hosts/count.xml?zone_id=#</p>
+
+<p>Response:</p>
+<pre>&lt;count&gt;12&lt;/count&gt;
+</pre>
+
+<p>This is the total number of hosts available for zone [zone_id]. It
+is the same result as provided in the X-Query-Count header above.</p>
+
+
+
+<h4>Listing a Specific Host</h4>
+
+<p>Request: GET /api/1.1/hosts/[host_id].xml</p>
+
+<p>Response:</p>
+<pre>&lt;host&gt;
+  &lt;created-at type="datetime"&gt;2008-12-07T02:51:13Z&lt;/created-at&gt;
+  &lt;data&gt;172.16.16.1&lt;/data&gt;
+  &lt;fqdn&gt;example.com&lt;/fqdn&gt;
+  &lt;host-type&gt;A&lt;/host-type&gt;
+  &lt;hostname nil="true"/&gt;
+  &lt;id type="integer"&gt;2499&lt;/id&gt;
+  &lt;priority type="integer" nil="true"/&gt;
+  &lt;ttl type="integer" nil="true"/&gt;
+  &lt;updated-at type="datetime"&gt;2008-12-07T02:51:13Z&lt;/updated-at&gt;
+  &lt;zone-id type="integer"&gt;959&lt;/zone-id&gt;
+&lt;/host&gt;
+</pre>
+
+
+<h4>Getting a Blank Host</h4>
+
+<p>Request: GET /api/1.1/zones/[zone_id]/hosts/new.xml</p>
+<p>Alternate: GET /api/1.1/hosts/new.xml?zone_id=#</p>
+<p>Alternate: GET /api/1.1/hosts/new.xml</p>
+
+<p>Response:</p>
+<pre>&lt;host&gt;
+  &lt;data nil="true"/&gt;
+  &lt;host-type&gt;A&lt;/host-type&gt;
+  &lt;hostname nil="true"/&gt;
+  &lt;priority type="integer" nil="true"/&gt;
+  &lt;ttl type="integer" nil="true"/&gt;
+&lt;/host&gt;
+</pre>
+
+<p>This response may be useful to obtain a blank host, suitable for use
+as a template or retrieving default values for included fields. zone_id
+will be populated only if provided.</p>
+
+
+<h4>Creating a New Host</h4>
+
+<p>Request: POST /api/1.1/zones/[zone_id]/hosts.xml</p>
+<p>Alternate: POST /api/1.1/hosts.xml?zone_id=?</p>
+<pre>&lt;host&gt;
+  &lt;data&gt;172.16.16.2&lt;/data&gt;
+  &lt;host-type&gt;A&lt;/host-type&gt;
+  &lt;hostname&gt;www&lt;/hostname&gt;
+  &lt;priority type="integer" nil="true"/&gt;
+  &lt;ttl type="integer" nil="true"/&gt;
+&lt;/host&gt;
+</pre>
+
+<p>Response: If successful, a copy of the new host along with an HTTP
+201 Created status. If unsuccessful, an HTTP 422 Unprocessable Entity
+status and a list of errors:</p>
+<pre>&lt;errors&gt;
+  &lt;error&gt;Data must be an IP&lt;/error&gt;
+&lt;/errors&gt;
+
+</pre>
+
+<p>Note that priority or ttl can be left out entirely if their value is nil.</p>
+
+
+<h4>Updating an Existing Host</h4>
+
+<p>Request: PUT /api/1.1/hosts/[host_id].xml</p>
+<pre>&lt;host&gt;
+  &lt;data&gt;172.16.16.2&lt;/data&gt;
+  &lt;host-type&gt;A&lt;/host-type&gt;
+  &lt;hostname&gt;www&lt;/hostname&gt;
+  &lt;priority type="integer" nil="true"/&gt;
+  &lt;ttl type="integer" nil="true"/&gt;
+&lt;/host&gt;
+</pre>
+
+<p>Response: If successful, simply an HTTP 200 OK status. If
+unsuccessful, an HTTP 422 Unprocessable Entity status and a list of
+errors:</p>
+<pre>&lt;errors&gt;
+  &lt;error&gt;Data must be an IP&lt;/error&gt;
+&lt;/errors&gt;
+
+</pre>
+
+
+<h4>Deleting a Host</h4>
+
+<p>Request: DELETE /api/1.1/hosts/[host_id].xml</p>
+
+<p>Response: If successful, an HTTP 200 OK status.</p>
+
+
+<h4>Getting the current public IP</h4>
+
+<p>If you're doing development or production behind NAT devices, it may be helpful to retrieve your current public IP address.</p>
+
+<p>Request: GET /api/1.1/tools/public_ipv4.xml</p>
+
+<p>Response: </p>
+<pre>&lt;ipv4&gt;64.27.57.4&lt;/ipv4&gt;
+</pre>
+
+
+</div>
+      
+      <div class="clear"></div>
+    </div>
+		<div class="footer">
+      <div class="right-links">
+        
+        <ul>
+    	    <li><a href="http://www.zerigo.com/">Home</a></li>
+<li><a href="http://www.zerigo.com/services">Services</a></li>
+<li><a href="http://www.zerigo.com/about">About Us</a></li>
+<li><a href="http://www.zerigo.com/support">Support</a></li>
+<li><a href="http://www.zerigo.com/blog">Blog</a></li>
+<li><a href="http://www.zerigo.com/contact">Contact Us</a></li>
+  	    </ul>
+  	    
+      </div>
+
+      <a href="http://www.zerigo.com/contact">Contact Us</a>. 1-888-9-ZERIGO or <script type="text/javascript">eval(decodeURIComponent('%64%6f%63%75%6d%65%6e%74%2e%77%72%69%74%65%28%27%3c%61%20%68%72%65%66%3d%22%6d%61%69%6c%74%6f%3a%73%75%70%70%6f%72%74%40%7a%65%72%69%67%6f%2e%63%6f%6d%22%3e%73%75%70%70%6f%72%74%40%7a%65%72%69%67%6f%2e%63%6f%6d%3c%2f%61%3e%27%29%3b'))</script><a href="mailto:support@zerigo.com">support@zerigo.com</a>
+		</div>
+		<div class="sub-footer">
+      
+      <a href="http://www.zerigo.com/terms">Copyright</a> © 2009 Zerigo, Inc.; all rights reserved.
+		</div>
+  </div>
+</body></html>

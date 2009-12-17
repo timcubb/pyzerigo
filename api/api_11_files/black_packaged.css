@@ -1,0 +1,521 @@
+ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%; font-family: inherit; vertical-align: baseline}
+ :focus {outline: 0}
+body {line-height: 1; color: black; background: white}
+ol, ul {list-style: none}
+ table {border-collapse: separate; border-spacing: 0}
+caption, th, td {text-align: left; font-weight: normal}
+blockquote:before, blockquote:after, q:before, q:after {content: ""}
+blockquote, q {quotes: "" ""}
+  .ui-helper-hidden {display: none}
+.ui-helper-hidden-accessible {position: absolute; left: -99999999px}
+.ui-helper-reset {margin: 0; padding: 0; border: 0; outline: 0;  text-decoration: none; font-size: 100%; list-style: none}
+.ui-helper-clearfix:after {content: "."; display: block; height: 0; clear: both; visibility: hidden}
+.ui-helper-clearfix {display: inline-block}
+ * html .ui-helper-clearfix {height:1%}
+.ui-helper-clearfix {display:block}
+ .ui-helper-zfix {width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0)}
+.ui-icon {display: block; text-indent: -99999px; overflow: hidden; background-repeat: no-repeat}
+.ui-icon {width: 16px; height: 16px; background-image: url(../images/jq/jqui-icons-000000.png)}
+   .ui-state-hover .ui-icon, .ui-state-focus .ui-icon {background-image: url(../images/jq/jqui-icons-666666.png)}
+.ui-state-active .ui-icon {background-image: url(../images/jq/jqui-icons-666666.png)}
+   .ui-icon-triangle-1-e {background-position: -32px -16px}
+ .ui-icon-triangle-1-s {background-position: -64px -16px}
+  .ui-tabs {zoom: 1}
+.ui-tabs .ui-tabs-nav {list-style: none; position: relative; padding: .2em .2em 0}
+.ui-tabs .ui-tabs-nav li {position: relative; float: left; border-bottom-width: 0 !important; margin: 0 .2em -1px 0; padding: 0}
+.ui-tabs .ui-tabs-nav li a {float: left; text-decoration: none; padding: .5em 1em}
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected { border-bottom-width: 0}
+ .ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a {cursor: pointer}
+ .ui-tabs .ui-tabs-panel {display: block; border-width: 0; background: none}
+.ui-tabs .ui-tabs-hide {display: none !important}
+   .ui-dialog {background: #ddd;  border: 2px solid #888; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; position: relative;  width: 300px}
+.ui-dialog .ui-dialog-titlebar { border-bottom: 1px solid #888; background: #bbb;  color: #000;  padding: .5em .3em .3em 1em; position: relative}
+.ui-dialog .ui-dialog-title {float: left; margin: .1em 0 .2em}
+.ui-dialog .ui-dialog-titlebar-close {position: absolute; right: .3em; top: 50%; margin: -10px 0 0 0; padding: 1px; height: 18px}
+.ui-dialog .ui-dialog-titlebar-close span {display: block; margin: 1px}
+ .ui-dialog .ui-dialog-content {border: 0; padding: .5em 1em; background: none; overflow: auto; zoom: 1}
+.ui-dialog .ui-dialog-buttonpane {text-align: left; border-width: 1px 0 0 0; background-image: none; margin: .5em 0 0 0; padding: .3em 1em .5em .4em}
+.ui-dialog .ui-dialog-buttonpane button {float: right; margin: .5em .4em .5em 0; cursor: pointer; padding: .2em .6em .3em .6em; line-height: 1.4em; width:auto; overflow:visible}
+.ui-dialog .ui-resizable-se {width: 14px; height: 14px; right: 3px; bottom: 3px}
+.ui-draggable .ui-dialog-titlebar {cursor: move}
+.ui-slider {position: relative; text-align: left}
+.ui-slider .ui-slider-handle {background: #558f21; border: 1px solid #fff; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; cursor: default;  height: 16px; position: absolute;  width: 16px; z-index: 2}
+.ui-slider-vertical {background: #555; border: 1px solid #bbb; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; height: 120px;  width: 10px}
+.ui-slider-vertical .ui-slider-handle { left: -4px; margin-left: 0;  margin-bottom: -9px}
+  @media screen and (max-device-width: 480px) {html {-webkit-text-size-adjust: none}
+}
+body {font-family: "Lucida Grande", Lucida, Verdana, sans-serif; font-size: 13px; line-height: 18px}
+code {font: 10pt monospace}
+pre {font-family: monospace; overflow: auto; padding-bottom: 7px; margin-bottom: 7px}
+strong {font-weight: bold}
+em {font-style: italic}
+  .clear {clear: both}
+.clear-force {clear: both; height: 1px}
+body {background: #000; color: #ccc}
+body a {    color: #59c9ff; text-decoration: none}
+body a:hover { color: #fff;  }
+h1, h2, h3, h4, h5, h6 {line-height: 110%}
+h2 {color: #fff; font-size: 44px; border-bottom: 1px solid #505050; padding: 19px 0 20px 0; margin-bottom: 15px}
+h3 {color: #fff; font-size: 28px; padding: 8px 0; margin-bottom: 4px}
+h4 {color: #fff; font-size: 22px; padding: 15px 0 15px 0}
+h5 {color: #fff; font-size: 16px; padding-bottom: 12px}
+h6 {color: #fff; font-size: 14px}
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {color: #fff}
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {text-decoration: underline}
+div.extra-header-spacing h2, div.extra-header-spacing h3, div.extra-header-spacing h4, div.extra-header-spacing h5, div.extra-header-spacing h6 {margin-top: 15px}
+div.container {width: 960px; margin: 0 auto; padding: 0 6px}
+.header {background-image: url(../images/black/bg_header.png); height: 20px; padding: 30px 20px; margin-bottom: 2px}
+.footer {background-image: url(../images/black/bg_footer.png); color: #a8a8a8; height: 41px; margin-top: 50px; margin-bottom: 2px; padding: 25px 20px 2px}
+.sub-footer {color: #999; font-size: 9px; margin: 0 6px 20px; text-align: right}
+.footer-time {color: #999; float: left; font-size: 9px; text-align: left}
+.header a, .footer a, .sub-footer a {color: #fff}
+.header a:hover, .footer a:hover, .sub-footer a:hover {text-decoration: underline}
+.header h1 {width: 145px; height: 46px; float: left}
+.header h1 a {display: block; height: 46px; margin-top: -14px; text-indent: -9999px}
+.right-links ul {float: right}
+.right-links ul li {display: inline}
+.right-links li a {  }
+.header .right-links li a {padding: 0 10px}
+.footer .right-links li a {padding: 0 5px}
+.graphic {display: none}
+ div#change_acct {background: #000; border: 1px solid #505050; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; font-size: 13px; padding: 10px 15px; position: absolute; left: 250px; text-align: left; top: 10px; width: 200px; z-index: 100}
+div#change_acct ul {float: none; font-size: 13px; line-height: 18px;  padding: 0 0 14px}
+div#change_acct li {display: list-item;  margin-left: 15px}
+div#change_acct li a { font-size: 13px; margin: 0}
+div#change_acct h4 {padding: 2px 0 6px}
+div#change_acct .create {clear: both}
+div#change_acct .cancel {float: right}
+ .first-column, .column, .column2, .first-column2, .first-column3 {float: left}
+div.grid2col, div.grid3col {clear: both}
+div.grid2col div.first-column {width: 444px}
+div.grid2col div.column {width: 444px; margin-left: 72px}
+div.light-content div.grid2col div.first-column {width: 414px}
+div.light-content div.grid2col div.column {width: 414px; margin-left: 60px}
+div.grid3col div.first-column {width: 313px; margin-right: 1px}
+div.grid3col div.column {width: 313px; margin-left: 10px}
+div.grid3col div.column2 {width: 636px}
+div.light-content div.grid3col div.first-column {width: 276px; margin-right: 0}
+div.light-content div.grid3col div.column {width: 276px; margin-left: 30px}
+div.light-content div.grid3col div.column2 {width: 582px}
+div.grid4col div.first-column {width: 216px}
+div.grid4col div.column {margin-left: 32px; width: 216px}
+div.grid4col div.first-column2 {width: 464px}
+div.grid5col div.first-column {width: 168px}
+div.grid5col div.column {margin-left: 30px; width: 168px}
+div.grid5col div.first-column3 {width: 564px}
+div.one-column {margin: 0 100px}
+div.header2 {height: 25px; font-size: 16px; padding-top: 5px; text-align: right}
+div.tab-content { margin-top: 26px}
+ div.light-content {background: #fefffe url(../images/black/bg_light_box.png) repeat-x left top; border: 1px solid #000; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; color: #000; padding: 40px 35px 50px}
+div.light-content a {color: #666; text-decoration: underline}
+div.light-content a:hover {color: #000}
+div.light-content h2, div.light-content h3, div.light-content h4, div.light-content h5, div.light-content h6 {color: #000}
+div.light-content h2 a, div.light-content h3 a, div.light-content h4 a, div.light-content h5 a, div.light-content h6 a {color: #000; text-decoration: none}
+div.light-content h2 a:hover, div.light-content h3 a:hover, div.light-content h4 a:hover, div.light-content h5 a:hover, div.light-content h6 a:hover {text-decoration: underline}
+div.light-content div#pagination {padding: 10px; border: 1px solid #999; font-size: 18px; margin-top: 40px; text-align: center}
+div.light-content hr {border: none; border-bottom: 1px solid #888}
+ p {    padding: 0 0 14px 0}
+p.big-lead {padding-top: 20px}
+p.small-lead {padding-top: 14px}
+p.no-tail {padding-bottom: 0}
+ .tab-content ul {padding: 0 0 14px 0; list-style: circle outside}
+.tab-content ol {padding: 0 0 14px 14px; list-style: decimal outside}
+.tab-content li { margin-left: 15px}
+ div.grey-box { border: 1px solid #505050; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; padding: 5px 15px}
+table.chart {background: #000; border: 1px solid #505050; border-collapse: separate; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; color: #ccc; line-height: 16px; width: 100%}
+ *:first-child+html table.chart {border-collapse: collapse}
+table.chart tr.head th.c0 {-moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px}
+table.chart tr.head th.last {-moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px}
+table.chart tr.last td.c0 {-moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px}
+table.chart tr.last td.last {-moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px}
+table.chart tr.odd td {background: #161616}
+table.chart th, table.chart td {border-right: 1px solid #323232; height: 50px;  padding: 0 15px; vertical-align: middle}
+table.chart th.last, table.chart td.last {border-right: none}
+table.chart th {background: #282828; color: #fff; font-size: 14px;  }
+table.chart th a {color: #fff}
+table.chart th a:hover {text-decoration: underline}
+table.chart td { }
+table.list {border: 1px solid #505050; border-collapse: separate; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px}
+ *:first-child+html table.list {border-collapse: collapse}
+   table.super-basic-chart {line-height: 15px; margin-bottom: 20px}
+ *:first-child+html table.super-basic-chart {border-collapse: collapse}
+table.super-basic-chart th, table.super-basic-chart td {border-bottom: 1px solid #ddd; height: 31px; padding: 0 10px; vertical-align: middle}
+table.super-basic-chart th {font-weight: bold}
+table.super-basic-chart td {color: #444}
+ table.super-basic-chart tr.static-row td {border-bottom: 0; white-space: nowrap}
+table.super-basic-chart td.dynamic-row {padding: 0}
+table.super-basic-chart td.dynamic-row div {border-top: 1px solid #ddd; padding: 9px 27px}
+ #hosts-index table.super-basic-chart {margin-bottom: 0}
+#hosts-index table.super-basic-chart tr td {border-bottom: 0}
+#hosts-index table.super-basic-chart tr.head th {background: #ddd}
+#hosts-index table.super-basic-chart tr.head1 th.c0 {-moz-border-radius-topleft: 4px; -webkit-border-top-left-radius: 4px; border-top-left-radius: 4px}
+#hosts-index table.super-basic-chart tr.head1 th.c4 {-moz-border-radius-topright: 4px; -webkit-border-top-right-radius: 4px; border-top-right-radius: 4px}
+#hosts-index table.super-basic-chart tr.head2 th {  }
+#hosts-index table.super-basic-chart tr.head2 th.c1 {border-top: 1px solid #bbb}
+#hosts-index table.super-basic-chart tr.row2 td { }
+#hosts-index table.super-basic-chart .c0 {width: 175px;}
+#hosts-index table.super-basic-chart th.c0 {text-align:center;}
+#hosts-index table.super-basic-chart td.c0 div {width: 175px; color:#000; overflow:hidden; text-align:right; white-space:nowrap;}
+#hosts-index table.super-basic-chart td.c0 div span {font-weight:bold}
+#hosts-index table.super-basic-chart .c1 {width: 50px;}
+#hosts-index table.super-basic-chart tr.row2 td.c1 {border-top: 1px solid #ddd}
+#hosts-index table.super-basic-chart tr.row2 td.c1 div {width: 370px; overflow:hidden}
+#hosts-index table.super-basic-chart .c2 {width: 50px; text-align:center;}
+#hosts-index table.super-basic-chart .c3 {width: 230px;}
+#hosts-index table.super-basic-chart .c4 {width: 75px; text-align: center;}
+#hosts-index table.super-basic-chart td.dynamic-row-b {border-bottom: 1px solid #888; padding: 0}
+#hosts-index table.super-basic-chart td.dynamic-row-b div.content {border-top: 1px solid #888; padding: 0 10px 16px}
+#hosts-index table.super-basic-chart div.content form.distinct-form {border-top: 0; -moz-border-radius-topleft: 0; -webkit-border-top-left-radius: 0; border-top-left-radius: 0; -moz-border-radius-topright: 0; -webkit-border-top-right-radius: 0; border-top-right-radius: 0}
+#hosts-index .table-hover-handler.hover tr.row1, #hosts-index .table-hover-handler.hover tr.row2 {background: #eee}
+table.list tr.head th.c0 {-moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px}
+table.list tr.head th.last {-moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px}
+table.list tr.last td.c0 {-moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px}
+table.list tr.last td.last {-moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px}
+table.list th {background: #1a1a1a}
+table.list td.c0, table.list td.c2, table.list td.c4 {background: #242424}
+table.list td.hover {background: #444}
+table.list td.selected {background: #558f21}
+table.list th, table.list td {border-right: 1px solid #333; color: #fff; font-size: 11px; line-height: 140%; margin: 1px; padding: 8px 10px; text-align: center; width: 95px}
+table.list th > div, table.list td > div {width: 95px;  }
+table.list th.last, table.list td.last {border-right: none}
+table.list th {font-size: 14px; padding: 15px 10px}
+table.list tr.r0 td {font-size: 30px; padding-bottom: 0}
+table.list tr.r1 td {font-size: 9px; padding: 0 10px 20px}
+table.list tr.last td {padding-bottom: 30px}
+ form.over-under div.form-element {float: left; margin: 0 10px 10px 0}
+form.over-under div.form-element-group {margin: 0 10px 10px 0}
+form.over-under label {color: #aaa; display: block;  }
+form.over-under div.form-element-radio { margin: 2px 0}
+form.over-under div.form-element-checkbox label {display: inline; padding-left: 6px}
+form.over-under div.form-element-radio label {display: inline; padding-left: 6px}
+form.over-under .fieldWithErrors label {color: #f66}
+form.over-under span.form-help {color: #999; display: block; font-style: italic; padding-top: 3px}
+form.over-under .form-indent {clear: left; margin-left: 30px}
+div.light-content form.over-under label {color: #000}
+div.light-content form.over-under span.form-help {color: #444}
+div.light-content form.over-under .fieldWithErrors label {color: #d00}
+  div.messaging {-moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; padding: 10px; margin-bottom: 20px}
+div.messaging.notice {border: 1px solid green; background: #bee27a; color: green}
+div.messaging.warning, div.messaging.error {border: 1px solid red; background: #fda2a2; color: red}
+div.messaging a {color: #000}
+  div.faded-divider {background: url(../images/black/divider_fade.png) top center; height: 1px; margin: 30px 0; text-align: center}
+div.faded-divider-center {background: url(../images/black/divider_fade.png) top center; height: 1px; margin: 1px 0 17px; text-align: center}
+ .watermark {color: #999; font-style: italic}
+  .errorExplanation h2 {display:none}
+ #home-intro {background-image: url(../images/black/home_hero_3.png); font-size: 16pt; height: 142px; line-height: 22pt; padding: 80px 190px; margin: -30px 0 0; margin-bottom: 10px}
+#home-intro a {display: block; height: 142px}
+#home-pods {background-image: url(../images/black/bg_fpp_servers.png)}
+#home-watchdog {background-image: url(../images/black/bg_fpp_watchdog.png)}
+#home-ns {background-image: url(../images/black/bg_fpp_dns.png)}
+.home-service {height: 255px; padding: 15px 0 0}
+.home-service h3 {padding: 0}
+.home-service h3 a {display: block; height: 86px; margin: 0 15px; text-indent: -9999px}
+.home-service p {height: 98px; line-height: 17px; padding: 0 15px; margin: 10px 0 14px}
+.home-service div.links {height: 32px; margin: 0 15px}
+.home-service a.learn-more, .home-service a.sign-up {display: block; height: 32px; text-indent: -9999px; width: 135px}
+.home-service a.learn-more {background: url(../images/black/btn_learn_more.png) no-repeat left top; float: left}
+.home-service a.sign-up {background: url(../images/black/btn_sign_up.png) no-repeat left top; float: right}
+.home-service a.learn-more:hover, .home-service a.sign-up:hover {background-position: left -32px}
+#home-news {margin-left: 3px;  padding-top: 45px; width: 450px}
+p.news-item { line-height: 16px; margin: 7px 0; padding: 0}
+p.news-footer {color: #a8a8a8; font-size: 8pt; line-height: 9pt; margin: 7px 0 30px -3px; padding: 0}
+ #header-services {background: url(../images/black/services-header.png) no-repeat left top; border-bottom: 1px solid #505050; height: 25px; padding-bottom: 20px; margin-bottom: 30px}
+#services-servers {background: url(../images/black/services-servers-logo.png) no-repeat left top}
+#services-watchdog {background: url(../images/black/services-wd-logo.png) no-repeat left top}
+#services-dns {background: url(../images/black/services-dns-logo.png) no-repeat left top}
+.services-service h3 {margin: 0; padding: 0}
+.services-service h3 a {display: block; height: 66px; margin: 0 30px 0 0; text-indent: -9999px}
+.services-service div.core {height: 370px; padding: 0 5px}
+.services-service div.core ul li {margin-bottom: 3px}
+.services-service p {height: 80px}
+.services-service div.links {height: 32px; margin: 0 15px}
+.services-service a.learn-more, .services-service a.sign-up {display: block; height: 32px; text-indent: -9999px; width: 135px}
+.services-service a.learn-more {background: url(../images/black/btn_learn_more.png) no-repeat left top; float: left}
+.services-service a.sign-up {background: url(../images/black/btn_sign_up.png) no-repeat left top; float: right}
+.services-service a.learn-more:hover, .services-service a.sign-up:hover {background-position: left -32px}
+#services-footer {margin: 50px 0; padding: 10px 15px}
+#services-footer a {padding-left: 25px}
+ #header-pods {background: url(../images/black/logo_servers_service.png) no-repeat left top}
+#header-watchdog {background: url(../images/black/logo_watchdog_service.png) no-repeat left top}
+#header-ns {background: url(../images/black/logo_dns_service.png) no-repeat left top}
+.header-service {border-bottom: 1px solid #494949; height: 63px; padding-bottom: 20px; margin-bottom: 15px}
+.header-service h2 {border: 0}
+.header-service h2 a {display: block; height: 50px; margin-top: -63px; padding-top: 20px; text-indent: -9999px; width: 300px}
+.header-service div.links {padding-top: 46px}
+.header-service ul {float: right;   }
+.header-service ul li {display: inline; line-height: 100%; margin: 0}
+.header-service .links a {color: #a8a8a8; font-size: 14px; margin-left: 20px}
+.header-service ul li.active a {color: #fff; font-weight: bold}
+.header-service ul li a:hover {text-decoration: underline}
+.header-service a.service-sign-up {margin-top: -6px}
+a.service-sign-up {display: block; float: right; height: 28px;  text-indent: -9999px; width: 109px}
+a.service-sign-up {background: url(../images/black/btn_sign_up_service.png) no-repeat left top}
+a.service-sign-up:hover {background-position: left -28px}
+ div.service-intro { margin: 8px 0 40px}
+div.service-cta-button { }
+div.service-intro-price {background: #161616; border: 1px solid #505050; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;   margin: 30px 40px 0; padding: 10px; text-align: center}
+div.grid4col div.column div.service-intro-price {margin: 0}
+div.service-intro-price.hover {background: #222; cursor: pointer}
+div.service-intro-price .title {color: #fff; font-size: 14px}
+div.service-intro-price .price-amount {color: #fff; font-size: 28px; line-height: 1; padding: 5px 0}
+div.service-intro-price .price-amount span {font-size: 12px}
+div.servers-widget {background: #161616; border: 1px solid #505050; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; font-size: 12px; height: 200px; line-height: 1; margin-bottom: 30px; padding: 10px; text-align: center}
+div.servers-widget h5 {color: #fff; font-size: 20px; line-height: 1; padding: 5px 0 3px}
+div.servers-widget .slider-labels {float: left; font-size: 10px; line-height: 14px; margin: 4px 0; text-align: right; width: 50px}
+div.servers-widget .slider-labels.count4 div {margin-bottom: 26px}
+div.servers-widget .slider-labels.count7 div {margin-bottom: 6px}
+div.servers-widget #slider-vps, div.servers-widget #slider-cloud {float: left; margin: 10px}
+div.servers-widget .server-detail {float: right; margin-top: 8px; width: 170px}
+div.servers-widget .price-amount {color: #fff; font-size: 28px; line-height: 1; padding: 5px 0}
+div.servers-widget .price-amount span {font-size: 12px}
+div.servers-widget .specs {height: 85px}
+div.servers-widget .specs p {line-height: 150%; padding-bottom: 0}
+div.servers-widget .button {margin-right: 31px}
+div.service-detail {height: 150px; margin: 20px 0}
+img.service-icon {float: left;  }
+div.service-grid table {white-space: nowrap}
+div.service-grid table th {  }
+div.service-grid table th, div.service-grid table td {text-align: center}
+div.service-grid table th.c0 {text-align: center}
+div.service-grid table td.c0 {text-align: right}
+div.service-grid-vps {  margin: 15px auto 0; width: 525px}
+div.service-grid-vps p {padding: 4px 4px 14px}
+div.service-grid-vps table th, div.service-grid-vps table td { text-align: left}
+div.service-grid-vps table td.c2 {text-align: right}
+div.service-grid-ns {margin: 15px auto 0; width: 840px}
+ div.service-grid-ns table tr.r9 td, div.service-grid-ns table tr.r12 td {background: #222; color: #fff; font-size: 14px}
+div.service-grid-ns p { }
+div.service-grid-mon {margin: 15px auto 0; width: 835px}
+div.service-grid-mon p {padding: 4px 4px 14px}
+div.service-trailer {margin: 55px 0 65px; width: 355px}
+ .expand-feature-icon {margin-top: 10px}
+#expand-feature-menu {float: right; width: 160px}
+#expand-feature-menu h5 {border-bottom: 1px solid #505050; color: #fff; margin: 29px 0 6px; padding: 0 0 4px}
+#expand-feature-menu ul {background: #222; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; padding: 0}
+#expand-feature-menu li {list-style: none; margin: 0}
+#expand-feature-menu a {color: #a8a8a8; display: block; margin-bottom: 1px; padding: 2px 5px}
+#expand-feature-menu a:hover {background: #444; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; color: #fff; text-decoration: none}
+#expand-feature {margin: 0 215px}
+#expand-feature h3 {margin: 25px 0 10px}
+#expand-feature div.footer-link {border-top: 1px solid #505050; margin: 30px 0 50px; padding: 10px 15px; text-align: right}
+ div.tech-spec {float: left; height: 195px; margin: 40px 0 0 45px; width: 290px}
+div.tech-spec.first {margin-left: 0}
+div.tech-spec h5 {border-bottom: 1px solid #fff; color: #fff; margin-bottom: 15px; padding-bottom: 12px}
+div.tech-spec h5 img {float: left; margin: -18px 5px 0 0}
+div.tech-spec img.right-icon {float: right; margin: 0 20px 20px}
+ div.q-and-a h5 { margin: 32px 0 8px 0}
+div.qa-footer .links {padding-top: 5px; text-align: right}
+div.qa-footer .links a {margin-right: 25px}
+ div.signup-box {background: #000; border: 1px solid #505050; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; margin-top: 30px; padding: 7px 33px 33px; width: 892px}
+div.signup-box .big-spacer {min-height: 270px; margin-bottom: 30px}
+div.signup-box div.signup-bubble1 {background: url(../images/black/balloon_speech_tail.png); color: #fff; font-size: 11px; height: 44px; line-height: 14px; margin: -24px 0 -40px 260px; padding: 10px 18px; text-align: center; width: 139px}
+div.signup-box table.list {float:left}
+div.signup-box table.list th, div.signup-box table.list td {cursor: pointer}
+div.signup-box div.signup-left {clear: left; float: left; width: 600px}
+div.signup-box table#list2 {clear: left; margin-top: 10px}
+div.signup-box .signup-footer {clear:left; padding-top: 10px}
+div.signup-box div.signup-right {clear: right; float: right; width: 275px}
+div.signup-box div#selected-plan {min-height: 52px; margin-bottom: 30px}
+div.signup-box div#plan-name {color: #fff; font-size: 18px; padding: 8px 0}
+div.signup-box div#service_list {margin-bottom: 30px}
+div.signup-box div#service_list p {padding: 0}
+div.signup-box div#service_list div.side-option {border: 1px solid #000; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; color: #fff; cursor: pointer; padding: 4px}
+div.signup-box div#service_list div.hover {background: #444}
+div.signup-box div#service_list div.selected {background: #558f21}
+div.signup-box div#promo-field {font-color: #fff; margin: 30px 0 50px}
+div.signup-box div#promo-field p {padding-bottom: 4px}
+div.signup-box div#promo-field input {height: 17px; margin: 0; vertical-align: top; width: 200px}
+div.signup-box div#user-login { padding-top: 15px}
+a.sign-up-continue {display: block; height: 41px; text-indent: -9999px; width: 173px}
+a.sign-up-continue {background: url(../images/black/btn-form-continue.png) no-repeat left top}
+a.sign-up-continue:hover {background-position: left -41px}
+a.sign-up-sign-up {display: block; height: 41px;  text-indent: -9999px; width: 173px}
+a.sign-up-sign-up {background: url(../images/black/btn-form-sign-up.png) no-repeat left top}
+a.sign-up-sign-up:hover {background-position: left -41px}
+ .header-blog {margin: -25px 0 0}
+.header-blog h2 {border: 0; color: #fff; font-size: 28px; margin: 0; padding-top: 0}
+.header-blog ul {float: right; margin-top: 14px}
+.header-blog ul li {display: inline; line-height: 100%; margin: 0}
+.header-blog ul li a {color: #a8a8a8; font-size: 14px; margin-left: 25px}
+.header-blog ul li.active a {color: #fff; font-weight: bold}
+.header-blog ul li a:hover {text-decoration: underline}
+div.blog-date {color: #777; font: 10pt Georgia, Times, "Times New Roman", serif}
+div.blog-content {margin-bottom: 40px; width: 600px}
+div.blog-content h2 {border: 0; font-family: Georgia, Times, "Times New Roman", serif; font-size: 26pt; padding: 2px 0 0}
+div.blog-content p { }
+div.blog-sidebar, div.blog-side-services {clear: right; float: right; margin-bottom: 20px; width: 210px}
+div.blog-sidebar h5, div.blog-side-services h5 {border-bottom: 1px solid #c4c6c6; color: #000; font-size: 12pt; margin-bottom: 15px; padding-bottom: 6px}
+div.blog-sidebar div.item {margin-bottom: 20px}
+div.blog-sidebar div.month {clear: left; color: #777; float: left; font: 10pt Georgia, Times, "Times New Roman", serif; line-height: 1.1}
+div.blog-sidebar div.day {clear: left; color: #000; float: left; font: 16pt Georgia, Times, "Times New Roman", serif; line-height: 1.1}
+div.blog-sidebar a {color: #000; display: block; font: 10pt Georgia, Times, "Times New Roman", serif; line-height: 1.1; margin-left: 48px; text-decoration: none}
+div.blog-sidebar a:hover {text-decoration: underline}
+div.blog-side-services ul {list-style: none}
+div.blog-side-services li {margin: 0 0 6px}
+div.blog-side-services a { text-decoration: none}
+div.blog-side-services a:hover {text-decoration: underline}
+ #blog-comments {border-bottom: 1px solid #505050; margin-top: 20px; padding-bottom: 15px}
+#blog-comments h4 {border-bottom: 1px solid #505050; color: #fff; font-size: 18pt; margin-bottom: 5px; padding-bottom: 10px}
+#discussion {width: 750px}
+#discussion a {color: #fff; text-decoration: underline}
+#discussion a:hover {color: #aaa}
+#discussion .comment {border: 1px solid #505050; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; padding: 5px 10px; margin: 12px 0}
+#discussion .comment .upline { padding: 5px 0 5px}
+#discussion .comment .byline { padding-top: 2px; margin-bottom: 0; text-align: right}
+#discussion .leading-line { }
+#discussion .trailing-line {  }
+#discussion .comment .body {color: #fff; font-size: 11pt;  }
+#discussion .level1 {margin-left: 20px}
+#discussion .level2 {margin-left: 40px}
+#discussion .level3 {margin-left: 60px}
+#discussion .level4 {margin-left: 80px}
+#discussion .level5, #discussion .level6, #discussion .level7, #discussion .level8, #discussion .level9 {margin-left: 100px}
+#discussion .disapproved {background: #d77}
+#discussion .commentform {margin: 5px 0 2px; padding: 15px}
+  div.user-links {float: right;   text-align: right}
+.meter100 {background: #ddd; border: 1px solid #888; -moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; color: #000; float: left; font-size: 12px; height: 15px; line-height: 16px; margin-top: 2px; margin-right: 3px; width: 100px}
+.meter100 .fill {background: #558f21; -moz-border-radius: 1px; -webkit-border-radius: 1px; border-radius: 1px; color: #fff; float: left; font-size: 12px; line-height: 16px; height: 15px; margin-right: 2px}
+.meter100 .fill span {padding-left: 2px}
+.meter200 {width: 200px}
+.header-pre-light {margin: -25px 0 0}
+.header-pre-light h2 {border: 0; color: #a8a8a8; font-size: 28px; line-height: 1; margin: 0; padding: 0 0 12px}
+.header-pre-light h2 span {font-size: 12px}
+.header-pre-light ul {float: right; font-size: 18px; line-height: 26px;  margin-top: 5px; padding: 0}
+.header-pre-light ul li {display: inline;  margin: 0}
+.header-pre-light ul li a {color: #a8a8a8; font-size: 18px; margin-left: 25px}
+.header-pre-light ul li a:hover {text-decoration: underline}
+.header-pre-light ul li.active a {background: #558f21; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; color: #fff; font-weight: bold; padding: 2px 10px}
+div#mgmt-ui { padding: 20px 35px 50px}
+#mgmt-ui pre {font-size: 13px}
+#mgmt-ui .nav-group {border-bottom: 1px solid #000; margin: -20px -35px 22px; padding: 9px 19px}
+#mgmt-ui .nav-group ul {font-size: 14px; padding: 0}
+#mgmt-ui .nav-group li {display: inline; line-height: 100%; margin: 0 15px 0 0}
+#mgmt-ui .nav-group li a {text-decoration: none}
+#mgmt-ui .nav-group li.active a {color: #000; font-weight: bold}
+#mgmt-left-header {background: #222; border: 1px solid #222; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; float: left; line-height: 1; margin-right: 20px; width: 150px}
+#mgmt-left-header h2 {border: none; color: #fff; font-size: 16px; line-height: 1; margin: 0; padding: 6px 5px}
+#mgmt-left-menu {background: #ddd; border: 1px solid #888; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; float: left; line-height: 1; margin-right: 20px; min-height: 200px; overflow: hidden; padding-bottom: 2px; width: 150px}
+#mgmt-left-menu h2 {background: #222; border: none; -moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px; color: #fff; font-size: 16px; line-height: 1; margin: 0; padding: 6px 5px 2px}
+#mgmt-left-menu h2.tall {padding: 6px 5px}
+#mgmt-left-header h2.short {padding: 6px 5px 2px}
+#mgmt-left-menu a, #mgmt-left-header a.menu-create {display: block; text-decoration: none}
+#mgmt-left-menu a.menu-create, #mgmt-left-header a.menu-create {background: #222; color: #fff; font-size: 11px; padding: 0 5px 2px; text-align: right}
+#mgmt-left-menu a.menu-create:hover, #mgmt-left-header a.menu-create:hover {text-decoration: underline}
+#mgmt-left-menu .tag {background: #666; height: 13px; margin: 1px 0; padding: 2px 5px}
+#mgmt-left-menu .tag a {color: #fff; display: block; font-size: 13px}
+#mgmt-left-menu .tag-user { }
+#mgmt-left-menu .tag.ui-state-hover {background: #444; cursor: pointer}
+#mgmt-left-menu .tag.ui-state-active {background: #558f21; cursor: auto}
+#mgmt-left-menu ul {font-size: 12px; line-height: 17px; max-height: 494px; overflow: auto; overflow-x: hidden; padding: 0}
+#mgmt-left-menu li {display: block; margin: 0}
+#mgmt-left-menu li a {color: #444; overflow: hidden; padding: 1px 0px 1px 10px; white-space: nowrap; width: 135px}
+#mgmt-left-menu li:hover {background: #aaa}
+#mgmt-left-menu li a:hover {color: #000}
+#mgmt-left-menu .ui-icon {display: none}
+#mgmt-ui-hint {background: #ddd; border: 1px solid #888; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; float: right; margin-left: 20px; padding: 6px 10px; width: 180px}
+#mgmt-ui-messages { margin-left: 172px}
+#mgmt-ui-body { float: left; min-height: 650px; width: 714px}
+#mgmt-ui-body.with-hint {width: 494px}
+#mgmt-ui-body h3 {border-bottom: 1px solid #888; font-size: 20px; line-height: 1; margin-bottom: 8px; padding: 0 0 4px}
+#mgmt-ui-body span.hlink {font-size: 12px}
+ #mgmt-ui-body ul.details li label, .mgmt-ui-part ul.details li label {clear: left; display: block; float: left; font-weight: bold; line-height: 21px}
+#mgmt-ui-body ul.details li, .mgmt-ui-part ul.details li { line-height: 21px; list-style: none; margin: 0 0 2px}
+#mgmt-ui-body ul.service-summary {clear: left; float: left}
+#mgmt-ui-body ul.service-summary li {width: 340px}
+#mgmt-ui-body ul.service-summary li label {width: 90px}
+#mgmt-ui-body ul.service-summary li div.constrain {float: left; width: 250px}
+#mgmt-ui-body ul.access-summary {clear: right; float: right}
+#mgmt-ui-body ul.access-summary li label {width: 90px}
+#mgmt-ui-body ul.manage-summary li label {width: 73px}
+#mgmt-ui-body ul.billing-summary, .mgmt-ui-part ul.billing-summary {clear: left; float: left}
+ #mgmt-ui-body ul.billing-summary li label, .mgmt-ui-part ul.billing-summary li label {width: 125px}
+#mgmt-ui-body ul.billing-summary li div.constrain, .mgmt-ui-part ul.billing-summary li div.constrain {float: left; width: 365px;  }
+#mgmt-ui-body ul.domain-summary {clear: left; float: left}
+#mgmt-ui-body ul.domain-summary li label {width: 140px}
+#mgmt-ui-body ul.domain-summary li div.constrain {float: left; width: 200px}
+#mgmt-ui-body ul.domain-edit {clear: left; float: left}
+#mgmt-ui-body ul.domain-edit li label {display: block; float: left; width: 160px}
+#mgmt-ui-body ul.domain-edit li div.constrain {float: left; width: 450px}
+#mgmt-ui-body ul.ns-summary {clear: left; float: left}
+#mgmt-ui-body ul.ns-summary li label {width: 150px}
+#mgmt-ui-body ul.ns-summary li div.constrain {float: left; width: 300px}
+#mgmt-ui-body #details-edit-form {float:right; height: 50px; width: 300px}
+#mgmt-ui-body .instruct {color: #444}
+ #mgmt-ui .distinct-form {background: #ddd; border: 1px solid #bbb; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; padding: 16px 10px}
+#mgmt-ui .distinct-form .select-uuid {min-width: 300px}
+#mgmt-ui .form-group-header {clear: left; padding: 10px 0 5px}
+ .mgmt-overview-header {border-bottom: 1px solid #000; height: 64px; margin: 20px 0; padding-bottom: 7px}
+#mgmt-overview-header-servers {background: url(../images/black/logo_servers_service.png) no-repeat left top; float: left; height: 64px; text-indent: -9999px; width: 64px}
+#mgmt-overview-header-watchdog {background: url(../images/black/logo_watchdog_service.png) no-repeat left top; float: left; height: 64px; text-indent: -9999px; width: 64px}
+#mgmt-overview-header-dns {background: url(../images/black/logo_dns_service.png) no-repeat left 1px; float: left; height: 64px; text-indent: -9999px; width: 64px}
+div.mgmt-overview-header h4 {font-size: 34px; padding: 26px 0 0 76px}
+div.mgmt-overview-header a {display: block}
+div.mgmt-overview-header h4 a:hover {text-decoration: none}
+.mgmt-overview-trailing-space {margin-bottom: 100px;  }
+.service-overview {font-size: 16px}
+.service-overview p {padding-bottom: 3px}
+.service-overview-tier-2 h5 {border-bottom: 1px solid #888; font-size: 20px; margin-bottom: 8px; padding: 0 0 4px}
+#mgmt-news img {display: none}
+#mgmt-news p.news-item {margin-top: 0}
+#mgmt-news p.news-footer {color: #444; margin-left: 0}
+ table#pending-charges {margin-bottom: 50px}
+table#pending-charges .c1 {text-align: right}
+ .user-show {border-bottom: 1px solid #888; margin: 8px 0 0; padding: 0 0 10px}
+#users .user-name { font-weight: bold}
+.user-permissions {margin: 4px 8px 0}
+ #domain-form {margin-bottom: 14px}
+ #tabs .ui-tabs-nav li {margin-right: 6px}
+#tabs .ui-tabs-nav li a {background: #222; border: 2px solid #505050; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; color: #fff; font-size: 13px; text-align: center; width: 154px}
+#tabs .ui-tabs-nav li.ui-state-hover a {background: #444}
+#tabs .ui-tabs-nav li.ui-tabs-selected a {background: #fff; color: #222}
+#tabs .ui-tabs-panel .signup-box {min-height: 450px}
+ #feature-list {margin: 50px auto 20px; width: 750px}
+#feature-list h4 { padding: 10px 0 15px}
+#feature-list ul.ui-tabs-nav {float: left; margin: 7px 10px 0 0; padding: 0; width: 270px}
+#feature-list .ui-tabs-nav li {clear: left; margin: 0}
+ #feature-list .ui-tabs-nav li a {background: #222; border: 1px solid #000; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; color: #fff; display: block; line-height: 17px; padding: 6px 13px; width: 243px}
+#feature-list .ui-tabs-nav li.ui-tabs-selected, #feature-list .ui-tabs-nav li.ui-state-hover {padding-bottom: 0}
+#feature-list .ui-tabs-nav li.ui-state-hover a {background: #444}
+#feature-list .ui-tabs-nav li.ui-tabs-selected a {background: #558f21 }
+#feature-list div.feature-detail { margin: 1px 0 1px 280px; height: 450px}
+#feature-list div.ui-tabs-panel {height: 418px}
+#feature-list div.footer-buttons {}
+a.feature-next {background: url(../images/black/btn_next.png) no-repeat left top; display: block; float: left; height: 28px;  text-indent: -9999px; width: 110px}
+a.feature-next:hover {background-position: left -28px}
+ #api-resource-list li {margin: 0 0 0 10px}
+#api-content pre {margin: 0; padding: 0}
+#api-content .api-block {margin: 0 0 40px}
+#api-content code {background: #eee;   }
+#api-content .all-code {background: #eee; border: 1px solid #ddd; padding: 6px}
+#api-content .all-code code {  }
+dt {font-weight: bold;  }
+dd { margin-left: 30px}
+ #tabs-server-mgmt .mgmt-detail {clear: both; min-height: 450px; padding: 10px 17px 0}
+#tabs-server-mgmt ul.ui-tabs-nav {background: #ddd; border: 1px solid #888; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; margin: 10px 0 1px; padding: 0}
+#tabs-server-mgmt .ui-tabs-nav li {margin: 0 6px}
+#tabs-server-mgmt .ui-tabs-nav li a {color: #444;   padding: 2px 10px; text-align: center}
+#tabs-server-mgmt .ui-tabs-nav li.ui-state-hover a {background: #aaa; color: #000}
+#tabs-server-mgmt .ui-tabs-nav li.ui-tabs-selected a {background: #558f21; color: #fff}
+ #tabs-server-mgmt-manage ul.ui-tabs-nav {border: 1px solid #888; float: left; height: auto; margin: 0; padding: 0}
+#tabs-server-mgmt-manage .ui-tabs-nav li {clear: left; margin: 0}
+#tabs-server-mgmt-manage .ui-tabs-nav li a {display: block; line-height: 30px; text-align: left; width: 130px}
+#tabs-server-mgmt-manage .ui-tabs-nav li:first-child a {-moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px; -moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px}
+#tabs-server-mgmt-manage .ui-tabs-nav li:last-child a {-moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px}
+#tabs-server-mgmt-manage .mgmt-manage-detail {margin: 0 0 0 168px}
+#tabs-server-mgmt-manage div.ui-tabs-panel {float: left}
+ .ui-dialog {color: #000}
+.ui-dialog form.over-under label {color: #000}
+.ui-dialog form.over-under .fieldWithErrors label {color: #d00}
+.ui-dialog form.over-under span.form-help {color: #555}
+.ui-dialog a {color: #555}
+.ui-dialog .ui-dialog-titlebar-close {display: none}
+.ui-dialog div.errorExplanation p {display: none}
+.ui-dialog div.errorExplanation ul {background: #fff; border: 1px solid #888; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; margin-bottom: 8px; padding: 0 8px}
+.ui-dialog div.errorExplanation li {margin: 4px 0; line-height: 120%}
+ .hide-or-show {margin: 5px 0}
+.hide-or-show a span.ui-icon {float: left}
+.static-row a span.ui-icon {float: left}
+ .spin-small {background-image: url(../images/jq/ajax-loader2.gif); display: block; height: 16px; width: 16px}
+ #server-state .state-name {float: left}
+#server-state .spin-small {float: left; margin-left: 10px}
+ 
