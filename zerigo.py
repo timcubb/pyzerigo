@@ -33,12 +33,12 @@ class Zerigo(object):
                 restkit.httpc.HttpClient(),
                 {'Accept': 'application/xml'}
                 )
-        self.conn.add_authorization(restkit.httpc.BasicAuth((self.user, self.password)))
+        self.conn.add_authorization(restkit.httpc.BasicAuth(self.user, self.password))
 
     """List all zones for this account"""
     def list(self):
         xml = self.conn.get(self.api_url + '/zones.xml')
-        print xml
+        print xml.body
 
 class ZerigoZone(Zerigo):
     """Used to work on the given zone"""
