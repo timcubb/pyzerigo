@@ -25,7 +25,8 @@ class Zerigo(object):
     user = None
     password = None
     api_url = 'http://ns.zerigo.com/api/1.1'
-    logger = None
+
+    _logger = None
 
     def __init__(self):
         self._conn = restkit.RestClient(restkit.httpc.HttpClient(),
