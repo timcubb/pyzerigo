@@ -3,13 +3,12 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import restkit
+import logging
 import xml.etree.ElementTree
 
-ZERIGO_USER = 'louis.opter@dotcloud.com'
-ZERIGO_PASSWORD = '0ba5f1558ebd401cb14d37ddcf297226'
+import restkit
 
-class ZerigoException(Exception):
+class Exception(Exception):
 
     def __init__(self, value):
         self.__value = value
@@ -26,6 +25,7 @@ class Zerigo(object):
     user = None
     password = None
     api_url = 'http://ns.zerigo.com/api/1.1'
+    logger = None
 
     def __init__(self):
         self._conn = restkit.RestClient(restkit.httpc.HttpClient(),
@@ -37,7 +37,7 @@ class Zerigo(object):
         xml = self._conn.get(self.api_url + '/zones.xml')
         print xml.body
 
-class ZerigoZone(Zerigo):
+class Zone(Zerigo):
     """Used to create or work on the given zone"""
 
     """name: domain name of the zone
@@ -58,7 +58,7 @@ class ZerigoZone(Zerigo):
     def delete(self):
         pass
 
-class ZerigoHost(Zerigo):
+class Host(Zerigo):
     """Used to create or work on a host of the given zone"""
 
     """zone: domain name of the zone;
@@ -80,9 +80,3 @@ class ZerigoHost(Zerigo):
 
     def delete(self):
         pass
-
-if __name__ == '__main__':
-    Zerigo.user = ZERIGO_USER
-    Zerigo.password = ZERIGO_PASSWORD
-    account = Zerigo()
-    account.list()
