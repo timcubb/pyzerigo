@@ -11,7 +11,7 @@ from xml.etree.ElementTree import ElementTree
 
 import restkit
 
-from errors import ParseError
+from errors import ParseError, CreateError
 
 class Zerigo(object):
     """Base object for ZerigoZone and ZerigoHost.
@@ -27,7 +27,8 @@ class Zerigo(object):
 
     def __init__(self):
         self._conn = restkit.RestClient(restkit.httpc.HttpClient(),
-                                        {'Accept': 'application/xml'})
+                                        {'Accept': 'application/xml',
+                                         'Content-Type': 'application/xml'})
         self._conn.add_authorization(restkit.httpc.BasicAuth(self.user, self.password))
         Zerigo._logger.debug('using account ' + self.user + ':' + self.password)
 
@@ -40,6 +41,8 @@ class Zone(Zerigo):
     """Used to create or work on the given zone"""
 
     _url_list = string.Template('/zones/$name.xml')
+    _url_template = '/zones/new.xml'
+    _url_create = '/zones.xml'
 
     """name: domain name of the zone
 
@@ -49,25 +52,68 @@ class Zone(Zerigo):
 
         Zerigo.__init__(self)
         self.name = name
-        self.__id = None # used by Zerigo to do almost all operations.
 
-        url = Zerigo._url_api + Zone._url_list.substitute(name=self.name)
-        Zerigo._logger.debug('retrieving ' + url)
-        zone = self._conn.get(url)
+        try:
+            url = Zerigo._url_api + Zone._url_list.substitute(name=self.name)
+            Zerigo._logger.debug('retrieving ' + url)
+            zone = self._conn.get(url)
+        except restkit.ResourceNotFound:
+            self.__id = None
+            Zerigo._logger.debug('zone ' + self.name + ": doesn't exist (yet)")
+            return
+
+        self.__read_id(zone)
+        Zerigo._logger.debug('id for zone ' + self.name + ': ' + self.__id)
+
+    def __read_id(self, zone):
+        assert(zone)
+
         tree = ElementTree()
-        tree.parse(StringIO.StringIO(zone.body))
+        tree.parse(zone.body_file)
         id = tree.find('id')
-        if id == None or not id.text:
+        if id is None or not id.text:
             raise ParseError()
-        self.__id = id.text
-        Zerigo._logger.debug('id for zone: ' + self.name + ': ' + self.__id)
+        self.__id = id.text # used by Zerigo to do almost all operations.
 
     """Return a list of ZerigoHost for this zone"""
     def list(self):
         pass
 
     def create(self):
-        pass
+        if (self.__id):
+            raise CreateError(self.name, 'Domain already exists')
+
+        # get the template, can be cached
+        url = Zerigo._url_api + Zone._url_template
+        Zerigo._logger.debug('retrieving ' + url)
+        template = self._conn.get(url)
+
+        # parse it and create the form to post
+        tree = ElementTree()
+        tree.parse(template.body_file)
+        domain = tree.find('domain')
+        if domain is None:
+            raise ParseError()
+        del domain.attrib['nil']
+        domain.text = self.name
+        form = StringIO.StringIO()
+        tree.write(form)
+        form = form.getvalue()
+
+        # post it and read reply
+        url = Zerigo._url_api + Zone._url_create
+        try:
+            Zerigo._logger.debug('posting ' + url)
+            zone = self._conn.post(url, body=form)
+        except restkit.RequestFailed as errors:
+            errors = StringIO.StringIO(errors)
+            tree = ElementTree()
+            tree.parse(errors)
+            errors = [err.text for err in tree.findall('error')]
+            raise CreateError(self.name, ', '.join(errors))
+
+        self.__read_id(zone)
+        Zerigo._logger.debug('zone ' + self.name + ' created with id: ' + self.__id)
 
     def delete(self):
         pass

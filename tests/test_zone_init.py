@@ -6,3 +6,4 @@ import zerigo
 
 if __name__ == '__main__':
     zone = zerigo.Zone('vmlayers.org')
+    zone = zerigo.Zone('notfound.com')
