@@ -3,18 +3,15 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
 import logging
-import xml.etree.ElementTree
+import string
+import StringIO
+from xml.etree.ElementTree import ElementTree
 
 import restkit
 
-class Exception(Exception):
-
-    def __init__(self, value):
-        self.__value = value
-
-    def __str__(self):
-        return 'ZerigoException: ' + repr(value)
+from errors import ParseError
 
 class Zerigo(object):
     """Base object for ZerigoZone and ZerigoHost.
@@ -24,30 +21,46 @@ class Zerigo(object):
     """
     user = None
     password = None
-    api_url = 'http://ns.zerigo.com/api/1.1'
 
+    _url_api = 'http://ns.zerigo.com/api/1.1'
     _logger = None
 
     def __init__(self):
         self._conn = restkit.RestClient(restkit.httpc.HttpClient(),
                                         {'Accept': 'application/xml'})
         self._conn.add_authorization(restkit.httpc.BasicAuth(self.user, self.password))
+        Zerigo._logger.debug('using account ' + self.user + ':' + self.password)
 
     """Return a list of ZerigoZone for this account"""
     def list(self):
-        xml = self._conn.get(self.api_url + '/zones.xml')
+        xml = self._conn.get(Zerigo._url_api + '/zones.xml')
         print xml.body
 
 class Zone(Zerigo):
     """Used to create or work on the given zone"""
 
+    _url_list = string.Template('/zones/$name.xml')
+
     """name: domain name of the zone
 
     """
     def __init__(self, name):
+        assert(name)
+
         Zerigo.__init__(self)
         self.name = name
         self.__id = None # used by Zerigo to do almost all operations.
+
+        url = Zerigo._url_api + Zone._url_list.substitute(name=self.name)
+        Zerigo._logger.debug('retrieving ' + url)
+        zone = self._conn.get(url)
+        tree = ElementTree()
+        tree.parse(StringIO.StringIO(zone.body))
+        id = tree.find('id')
+        if id == None or not id.text:
+            raise ParseError()
+        self.__id = id.text
+        Zerigo._logger.debug('id for zone: ' + self.name + ': ' + self.__id)
 
     """Return a list of ZerigoHost for this zone"""
     def list(self):

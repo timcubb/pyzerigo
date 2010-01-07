@@ -4,6 +4,7 @@
 
 import logging
 
+from errors import *
 from zerigo import Zerigo, Zone, Host
 
 ZERIGO_USER = 'louis.opter@dotcloud.com'
