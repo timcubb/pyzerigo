@@ -10,6 +10,9 @@ class ZerigoException(Exception):
 class ParseError(ZerigoException):
     """Raised when the received xml is invalid"""
 
+    def __str__(self):
+        return 'Unknown xml received.'
+
 class CreateError(ZerigoException):
     """Raised when an host or zone creation fail"""
 
