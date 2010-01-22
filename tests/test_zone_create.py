@@ -15,7 +15,7 @@ if __name__ == '__main__':
     zone.create()
     try:
         zone.create()
-    except zerigo.CreateError:
+    except zerigo.AlreadyExists:
         pass
     else:
         zerigo.Zerigo._logger.debug('test fail: double create of a zone is impossible')

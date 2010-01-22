@@ -11,7 +11,7 @@ from xml.etree.ElementTree import ElementTree
 
 import restkit
 
-from errors import ParseError, CreateError, DeleteError
+from errors import ParseError, CreateError, AlreadyExists, NotFound
 
 class Zerigo(object):
     """Base object for ZerigoZone and ZerigoHost.
@@ -74,7 +74,7 @@ class Zone(Zerigo):
         self.__id = id
 
         if not self.__id:
-            # Try to get it
+            # Try to get the id
             try:
                 url = Zerigo._url_api + Zone._url_list.substitute(name=self.name)
                 Zerigo._logger.debug('retrieving ' + url)
@@ -106,7 +106,7 @@ class Zone(Zerigo):
         # do not assert on that, because the id is initialized in the
         # constructor, and the result is not available to the user.
         if (self.__id):
-            raise CreateError(self.name, 'Domain already exists')
+            raise AlreadyExists(self.name)
 
         # get the template, can be cached
         url = Zerigo._url_api + Zone._url_template
@@ -142,11 +142,13 @@ class Zone(Zerigo):
 
     def delete(self):
         if (self.__id is None):
-            raise DeleteError(self.name, "Domain doesn't exist")
+            raise NotFound(self.name)
 
         url = Zerigo._url_api + Zone._url_delete.substitute(zone_id=self.__id)
         Zerigo._logger.debug('deleting ' + url + ' (' + self.name + ')')
-        self._conn.delete(url) # will raise an exception in case of problem
+        # will raise an exception in case of problem. Maybe we should at least
+        # check for a 404 to be consitent by throwing a zerigo.NotFound ? :
+        self._conn.delete(url)
         self.__id = None # reset the id, the zone no longer exists
 
 class Host(Zerigo):

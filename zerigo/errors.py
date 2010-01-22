@@ -13,20 +13,38 @@ class ParseError(ZerigoException):
     def __str__(self):
         return 'Unable to decode the response.'
 
+class AlreadyExists(ZerigoException):
+    """Raised when you try to create an host or zone which already exists"""
+
+    def __init__(self, name):
+        self.__msg = name + ': already exists.'
+
+    def __str__(self):
+        return self.__msg
+
+class NotFound(ZerigoException):
+    """Raised when you try to do something which doesn't exists"""
+
+    def __init__(self, name):
+        self.__msg = name + ": doesn't exists."
+
+    def __str__(self):
+        return self.__msg
+
 class CreateError(ZerigoException):
-    """Raised when an host or zone creation fail"""
+    """Generic error raised when an host or zone creation fail"""
 
     def __init__(self, name, msg):
-        self.__msg = name + ': ' + (msg or 'Unknown error') + '.'
+        self.__msg = name + ': ' + (msg or 'unknown error') + '.'
 
     def __str__(self):
         return self.__msg
 
 class DeleteError(ZerigoException):
-    """Raised when an host or zone deletion fail"""
+    """Generic error raised when an host or zone deletion fail"""
 
     def __init__(self, name, msg):
-        self.__msg = name + ': ' + (msg or 'Unknown error') + '.'
+        self.__msg = name + ': ' + (msg or 'unknown error') + '.'
 
     def __str__(self):
         return self.__msg

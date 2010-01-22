@@ -10,12 +10,12 @@ if __name__ == '__main__':
     zone = zerigo.Zone('test.vmlayers.org')
     try:
         zone.create()
-    except zerigo.CreateError:
+    except zerigo.AlreadyExists:
         pass
     zone.delete()
     try:
         zone.delete()
-    except zerigo.DeleteError:
+    except zerigo.NotFound:
         pass
     else:
         zerigo.Zerigo._logger.debug('test fail: double delete of a zone is imposible')
