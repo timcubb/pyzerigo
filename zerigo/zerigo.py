@@ -60,6 +60,7 @@ class Zone(Zerigo):
 
     _url_create = '/zones.xml'
     _url_delete = string.Template('/zones/$zone_id.xml')
+    _url_hosts = string.Template('/zones/$zone_id/hosts.xml') # hosts list
     _url_list = string.Template('/zones/$name.xml') # zone attributes
     _url_template = '/zones/new.xml'
 
@@ -100,7 +101,41 @@ class Zone(Zerigo):
 
     """Return a list of ZerigoHost for this zone"""
     def list(self):
-        pass
+        # This list (but up to 300 hosts) is also returned when we get
+        # <_url_list>
+        if (self.__id is None):
+            raise NotFound(self.name)
+
+        url = Zerigo._url_api + Zone._url_hosts.substitute(zone_id=self.__id)
+        Zerigo._logger.debug('retrieving ' + url)
+        reply = self._conn.get(url)
+        try:
+            Zerigo._logger.debug(reply.headers['x-query-count'] + ' host(s) for zone: ' + self.name)
+        except:
+            raise ParseError()
+
+        tree = ElementTree()
+        tree.parse(reply.body_file)
+        list = []
+        hosts = tree.getiterator('host')
+        for it in hosts:
+            id = it.find('id')
+            hostname = it.find('hostname')
+            type = it.find('host-type')
+            data = it.find('data')
+            if id is None or type is None or data is None:
+                raise ParseError()
+            host = Host(self.name, id.text, self.__id)
+            host.type = type.text
+            host.data = data.text
+            if hostname is None \
+                or 'nil' in hostname.attrib and hostname.attrib['nil'] == 'true':
+                host.hostname = '@' # Bind notation
+            else:
+                host.hostname = hostname.text
+            list.append(host)
+
+        return list
 
     def create(self):
         # do not assert on that, because the id is initialized in the
@@ -113,13 +148,14 @@ class Zone(Zerigo):
         Zerigo._logger.debug('retrieving ' + url)
         template = self._conn.get(url)
 
-        # parse it and create the form to post
+        # parse and use it to create the form to post
         tree = ElementTree()
         tree.parse(template.body_file)
         domain = tree.find('domain')
         if domain is None:
             raise ParseError()
-        del domain.attrib['nil']
+        if 'nil' in domain.attrib:
+            del domain.attrib['nil']
         domain.text = self.name
         form = StringIO.StringIO()
         tree.write(form)
@@ -154,19 +190,20 @@ class Zone(Zerigo):
 class Host(Zerigo):
     """Used to create or work on a host of the given zone"""
 
-    """zone: domain name of the zone;
+    """zone: name of the zone;
        type: A, CNAME;
        hostname: name of the host;
        data: ip address for example.
 
     """
-    def __init__(self, zone):
+    def __init__(self, zone, id=None, zone_id=None):
         Zerigo.__init__(self)
         self.type = None
         self.hostname = None
         self.data = None
-        self.__zone_id = None
-        self.__id = None
+        self.zone = zone
+        self.__zone_id = zone_id
+        self.__id = id
 
     def create(self):
         pass
