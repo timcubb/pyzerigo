@@ -20,3 +20,5 @@ handler.setFormatter(logging.Formatter(ZERIGO_LOG_FORMAT))
 Zerigo._logger = logging.getLogger('zerigo')
 Zerigo._logger.addHandler(handler)
 Zerigo._logger.setLevel(ZERIGO_LOG_LEVEL)
+
+Zerigo._logger.debug('using account ' + Zerigo.user + ':' + Zerigo.password)

@@ -22,48 +22,66 @@ class Zerigo(object):
     user = None
     password = None
 
-    _url_api = 'http://ns.zerigo.com/api/1.1'
     _logger = None
+    _url_api = 'http://ns.zerigo.com/api/1.1'
+    _url_zones = '/zones.xml' # zones list
 
     def __init__(self):
         self._conn = restkit.RestClient(restkit.httpc.HttpClient(),
                                         {'Accept': 'application/xml',
                                          'Content-Type': 'application/xml'})
         self._conn.add_authorization(restkit.httpc.BasicAuth(self.user, self.password))
-        Zerigo._logger.debug('using account ' + self.user + ':' + self.password)
 
     """Return a list of ZerigoZone for this account"""
     def list(self):
-        xml = self._conn.get(Zerigo._url_api + '/zones.xml')
-        print xml.body
+        url = Zerigo._url_api + Zerigo._url_zones
+        Zerigo._logger.debug('retrieving ' + url)
+        reply = self._conn.get(url)
+        Zerigo._logger.debug(reply.headers['x-query-count'] + ' zone(s) for account: ' + Zerigo.user)
+
+        tree = ElementTree()
+        tree.parse(reply.body_file)
+        list = []
+        zones = tree.getiterator('zone')
+        for it in zones:
+            name = it.find('domain')
+            id = it.find('id')
+            if id is None or name is None:
+                raise ParseError()
+            list.append(Zone(name.text, id.text))
+
+        return list
 
 class Zone(Zerigo):
     """Used to create or work on the given zone"""
 
     _url_create = '/zones.xml'
     _url_delete = string.Template('/zones/$zone_id.xml')
-    _url_list = string.Template('/zones/$name.xml')
+    _url_list = string.Template('/zones/$name.xml') # zone attributes
     _url_template = '/zones/new.xml'
 
     """name: domain name of the zone
 
     """
-    def __init__(self, name):
+    def __init__(self, name, id=None):
         assert(name)
 
         Zerigo.__init__(self)
         self.name = name
+        self.__id = id
 
-        try:
-            url = Zerigo._url_api + Zone._url_list.substitute(name=self.name)
-            Zerigo._logger.debug('retrieving ' + url)
-            zone = self._conn.get(url)
-        except restkit.ResourceNotFound:
-            self.__id = None
-            Zerigo._logger.debug('zone ' + self.name + ": doesn't exist (yet)")
-            return
+        if not self.__id:
+            # Try to get it
+            try:
+                url = Zerigo._url_api + Zone._url_list.substitute(name=self.name)
+                Zerigo._logger.debug('retrieving ' + url)
+                zone = self._conn.get(url)
+            except restkit.ResourceNotFound:
+                self.__id = None
+                Zerigo._logger.debug('zone ' + self.name + ": doesn't exist (yet)")
+                return
+            self.__read_id(zone)
 
-        self.__read_id(zone)
         Zerigo._logger.debug('id for zone ' + self.name + ': ' + self.__id)
 
     def __read_id(self, zone):
