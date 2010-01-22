@@ -18,3 +18,12 @@ class CreateError(ZerigoException):
 
     def __str__(self):
         return self.__msg
+
+class DeleteError(ZerigoException):
+    """Raised when an host or zone deletion fail"""
+
+    def __init__(self, name, msg):
+        self.__msg = name + ': ' + (msg or 'Unknown error') + '.'
+
+    def __str__(self):
+        return self.__msg

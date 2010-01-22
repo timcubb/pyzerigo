@@ -11,7 +11,7 @@ from xml.etree.ElementTree import ElementTree
 
 import restkit
 
-from errors import ParseError, CreateError
+from errors import ParseError, CreateError, DeleteError
 
 class Zerigo(object):
     """Base object for ZerigoZone and ZerigoHost.
@@ -40,9 +40,10 @@ class Zerigo(object):
 class Zone(Zerigo):
     """Used to create or work on the given zone"""
 
+    _url_create = '/zones.xml'
+    _url_delete = string.Template('/zones/$zone_id.xml')
     _url_list = string.Template('/zones/$name.xml')
     _url_template = '/zones/new.xml'
-    _url_create = '/zones.xml'
 
     """name: domain name of the zone
 
@@ -80,6 +81,8 @@ class Zone(Zerigo):
         pass
 
     def create(self):
+        # do not assert on that, because the id is initialized in the
+        # constructor, and the result is not available to the user.
         if (self.__id):
             raise CreateError(self.name, 'Domain already exists')
 
@@ -116,7 +119,13 @@ class Zone(Zerigo):
         Zerigo._logger.debug('zone ' + self.name + ' created with id: ' + self.__id)
 
     def delete(self):
-        pass
+        if (self.__id is None):
+            raise DeleteError(self.name, "Domain doesn't exist")
+
+        url = Zerigo._url_api + Zone._url_delete.substitute(zone_id=self.__id)
+        Zerigo._logger.debug('deleting ' + url + ' (' + self.name + ')')
+        self._conn.delete(url) # will raise an exception in case of problem
+        self.__id = None # reset the id, the zone no longer exists
 
 class Host(Zerigo):
     """Used to create or work on a host of the given zone"""
