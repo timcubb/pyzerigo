@@ -73,6 +73,7 @@ class Zone(Zerigo):
         tree.parse(zone.body_file)
         id = tree.find('id')
         if id is None or not id.text:
+            self.__id = None
             raise ParseError()
         self.__id = id.text # used by Zerigo to do almost all operations.
 
