@@ -37,7 +37,10 @@ class Zerigo(object):
         url = Zerigo._url_api + Zerigo._url_zones
         Zerigo._logger.debug('retrieving ' + url)
         reply = self._conn.get(url)
-        Zerigo._logger.debug(reply.headers['x-query-count'] + ' zone(s) for account: ' + Zerigo.user)
+        try:
+            Zerigo._logger.debug(reply.headers['x-query-count'] + ' zone(s) for account: ' + Zerigo.user)
+        except KeyError:
+            raise ParseError()
 
         tree = ElementTree()
         tree.parse(reply.body_file)
