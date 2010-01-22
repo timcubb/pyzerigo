@@ -1,0 +1,32 @@
+Description:
+------------
+
+This python package implement the REST API of the DNS provider Zerigo.
+
+Requirements:
+-------------
+
+* Python >= 2.6;
+* restkit >= 0.9.3: http://bitbucket.org/benoitc/restkit/wiki/Home.
+
+Roadmap:
+--------
+
+0.0.1:
+    * Implement all methods.
+
+Future:
+    * Optimizations:
+        + keep in cache templates forms;
+        + keep in cache various lists and use count method to check for changes
+        (but it cans be not acceptable in certain cases);
+        + Use the list of host returned with the description of the zone if it's
+        smaller than 300 hosts.
+    * Features:
+        + ability to control more things like ttl, priority, nameservers, etc.
+
+Links:
+------
+
+* http://www.zerigo.com/ -- Zerigo website;
+* http://www.zerigo.com/docs/managed-dns -- Documentation on the REST API.
