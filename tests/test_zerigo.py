@@ -6,4 +6,4 @@ import zerigo
 
 if __name__ == '__main__':
     account = zerigo.Zerigo()
-    account.list()
+    zerigo.Zerigo._logger.debug('test success')

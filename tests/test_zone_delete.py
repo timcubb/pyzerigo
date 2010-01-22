@@ -18,5 +18,6 @@ if __name__ == '__main__':
     except zerigo.DeleteError:
         pass
     else:
-        print 'Fail: double delete of a zone is imposible'
+        zerigo.Zerigo._logger.debug('test fail: double delete of a zone is imposible')
         sys.exit(1)
+    zerigo.Zerigo._logger.debug('test success')
