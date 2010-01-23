@@ -239,7 +239,7 @@ class Host(Zerigo):
         assert(self.data)
 
         if self._id:
-            raise AlreadyExists(self.hostname)
+            raise AlreadyExists(self.fqdn)
 
         # it works like in Zone.create()
         url = Zerigo._url_api \
@@ -275,7 +275,7 @@ class Host(Zerigo):
             tree = ElementTree()
             tree.parse(errors)
             errors = [err.text for err in tree.findall('error')]
-            raise CreateError(self.name, ', '.join(errors))
+            raise CreateError(self.fqdn, ', '.join(errors))
 
         # read the id
         tree = ElementTree()
@@ -289,9 +289,9 @@ class Host(Zerigo):
     # same block in zone but different url
     def delete(self):
         if self._id is None:
-            raise NotFound(self.hostname)
+            raise NotFound(self.fqdn)
 
         url = Zerigo._url_api + Host._url_delete.substitute(host_id=self._id)
-        Zerigo._logger.debug('deleting ' + url + ' (' + self.hostname + ')')
+        Zerigo._logger.debug('deleting ' + url + ' (' + self.fqdn + ')')
         self._conn.delete(url)
         self._id = None
