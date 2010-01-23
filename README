@@ -13,7 +13,12 @@ Roadmap:
 --------
 
 0.0.1:
-    * Implement all methods.
+    * Implement all "basic" methods.
+
+0.0.2:
+    * Change the api if needed or requested;
+    * Fix bugs;
+    * Code refactoring.
 
 Future:
     * Optimizations:
@@ -23,6 +28,7 @@ Future:
         + Use the list of host returned with the description of the zone if it's
         smaller than 300 hosts.
     * Features:
+        + ability to update an existing zone or host;
         + ability to control more things like ttl, priority, nameservers, etc.
 
 Links:
