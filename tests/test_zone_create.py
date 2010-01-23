@@ -12,8 +12,9 @@ if __name__ == '__main__':
         zone.delete()
     except:
         pass
-    zone.create()
+    zone.create() # can fail, because the api is a bit time shifted.
     try:
+        zone = zerigo.Zone('test.vmlayers.org')
         zone.create()
     except:
         pass

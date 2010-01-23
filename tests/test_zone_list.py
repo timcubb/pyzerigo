@@ -8,7 +8,7 @@ def list_hosts(zone):
     hosts = zone.list()
     if len(hosts):
         print 'Hosts list for %s:\n * %s' % (zone.name,
-            '\n * '.join([host.hostname for host in hosts]))
+            '\n * '.join(hosts.keys()))
     else:
         print 'No hosts for %s: ' % zone.name
 

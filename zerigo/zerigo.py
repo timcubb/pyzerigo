@@ -32,7 +32,7 @@ class Zerigo(object):
                                          'Content-Type': 'application/xml'})
         self._conn.add_authorization(restkit.httpc.BasicAuth(self.user, self.password))
 
-    """Return a list of ZerigoZone for this account"""
+    """Return a list of Zone for this account"""
     def list(self):
         url = Zerigo._url_api + Zerigo._url_zones
         Zerigo._logger.debug('retrieving ' + url)
@@ -72,21 +72,21 @@ class Zone(Zerigo):
 
         Zerigo.__init__(self)
         self.name = name
-        self.__id = id
+        self._id = id
 
-        if not self.__id:
+        if not self._id:
             # Try to get the id
             try:
                 url = Zerigo._url_api + Zone._url_list.substitute(name=self.name)
                 Zerigo._logger.debug('retrieving ' + url)
                 zone = self._conn.get(url)
             except restkit.ResourceNotFound:
-                self.__id = None
+                self._id = None
                 Zerigo._logger.debug('zone ' + self.name + ": doesn't exist (yet)")
                 return
             self.__read_id(zone)
 
-        Zerigo._logger.debug('id for zone ' + self.name + ': ' + self.__id)
+        Zerigo._logger.debug('id for zone ' + self.name + ': ' + self._id)
 
     def __read_id(self, zone):
         assert(zone)
@@ -95,18 +95,18 @@ class Zone(Zerigo):
         tree.parse(zone.body_file)
         id = tree.find('id')
         if id is None or not id.text:
-            self.__id = None
+            self._id = None
             raise ParseError()
-        self.__id = id.text # used by Zerigo to do almost all operations.
+        self._id = id.text # used by Zerigo to do almost all operations.
 
-    """Return a list of ZerigoHost for this zone"""
+    """Return a dictionnary of Host for this zone (hostname in keys)"""
     def list(self):
         # This list (but up to 300 hosts) is also returned when we get
         # <_url_list>
-        if (self.__id is None):
+        if (self._id is None):
             raise NotFound(self.name)
 
-        url = Zerigo._url_api + Zone._url_hosts.substitute(zone_id=self.__id)
+        url = Zerigo._url_api + Zone._url_hosts.substitute(zone_id=self._id)
         Zerigo._logger.debug('retrieving ' + url)
         reply = self._conn.get(url)
         try:
@@ -116,7 +116,7 @@ class Zone(Zerigo):
 
         tree = ElementTree()
         tree.parse(reply.body_file)
-        list = []
+        list = {}
         hosts = tree.getiterator('host')
         for it in hosts:
             id = it.find('id')
@@ -125,22 +125,22 @@ class Zone(Zerigo):
             data = it.find('data')
             if id is None or type is None or data is None:
                 raise ParseError()
-            host = Host(self.name, id.text, self.__id)
-            host.type = type.text
-            host.data = data.text
             if hostname is None \
                 or 'nil' in hostname.attrib and hostname.attrib['nil'] == 'true':
-                host.hostname = '@' # Bind notation
+                hostname = '@' # Bind notation
             else:
-                host.hostname = hostname.text
-            list.append(host)
+                hostname = hostname.text
+            host = Host(hostname, self.name, id.text, self)
+            host.type = type.text
+            host.data = data.text
+            list[hostname] = host
 
         return list
 
     def create(self):
         # do not assert on that, because the id is initialized in the
         # constructor, and the result is not available to the user.
-        if (self.__id):
+        if (self._id):
             raise AlreadyExists(self.name)
 
         # get the template, can be cached
@@ -174,39 +174,115 @@ class Zone(Zerigo):
             raise CreateError(self.name, ', '.join(errors))
 
         self.__read_id(zone)
-        Zerigo._logger.debug('zone ' + self.name + ' created with id: ' + self.__id)
+        Zerigo._logger.debug('zone ' + self.name + ' created with id: ' + self._id)
 
     def delete(self):
-        if (self.__id is None):
+        if (self._id is None):
             raise NotFound(self.name)
 
-        url = Zerigo._url_api + Zone._url_delete.substitute(zone_id=self.__id)
+        url = Zerigo._url_api + Zone._url_delete.substitute(zone_id=self._id)
         Zerigo._logger.debug('deleting ' + url + ' (' + self.name + ')')
         # will raise an exception in case of problem. Maybe we should at least
         # check for a 404 to be consitent by throwing a zerigo.NotFound ? :
         self._conn.delete(url)
-        self.__id = None # reset the id, the zone no longer exists
+        self._id = None # reset the id, the zone no longer exists
 
 class Host(Zerigo):
     """Used to create or work on a host of the given zone"""
 
-    """zone: name of the zone;
-       type: A, CNAME;
+    _url_template = string.Template('/zones/$zone_id/hosts/new.xml')
+    _url_create = string.Template('/zones/$zone_id/hosts.xml')
+
+    """zonename: name of the zone;
        hostname: name of the host;
+       fqdn: hostname + zonename;
+       type: 'A', 'CNAME', 'MX', 'AAAA';
        data: ip address for example.
 
     """
-    def __init__(self, zone, id=None, zone_id=None):
+    def __init__(self, hostname, zonename, id=None, zone=None):
         Zerigo.__init__(self)
+        # agregate a zone because we need its id
+        self.__zone = zone or Zone(zonename)
+        if self.__zone._id is None: # the zone doesn't even exists
+            raise NotFound(self.__zone.name)
+        self.hostname = hostname
         self.type = None
-        self.hostname = None
         self.data = None
-        self.zone = zone
-        self.__zone_id = zone_id
-        self.__id = id
+        self._id = id
+
+        if self._id is None:
+            # To be refactored to avoid to fetch the entire zone
+            list = self.__zone.list()
+            if list.has_key(self.hostname):
+                clone = list[self.hostname]
+                self._id = clone._id
+                self.type = clone.type
+                self.data = clone.data
+            else:
+                Zerigo._logger.debug('host ' + self.fqdn + " doesn't exists (yet)")
+        else:
+            Zerigo._logger.debug('id for host ' + self.fqdn + ': ' + self._id)
+
+    @property
+    def zonename(self):
+        return self.__zone.name
+
+    @property
+    def fqdn(self):
+        return self.hostname + '.' + self.__zone.name
 
     def create(self):
-        pass
+        assert(self.type in ['A', 'CNAME', 'MX', 'AAAA'])
+        assert(self.data)
+
+        if self._id:
+            raise AlreadyExists(self.hostname)
+
+        # it works like in Zone.create()
+        url = Zerigo._url_api \
+              + Host._url_template.substitute(zone_id=self.__zone._id)
+        Zerigo._logger.debug('retrieving ' + url)
+        template = self._conn.get(url)
+
+        tree = ElementTree()
+        tree.parse(template.body_file)
+        type = tree.find('host-type')
+        hostname = tree.find('hostname')
+        data = tree.find('data')
+        if type is None or hostname is None or data is None:
+            raise ParseError()
+        type.text = self.type
+        if 'nil' in hostname.attrib:
+            del hostname.attrib['nil']
+        hostname.text = self.hostname
+        if 'nil' in data.attrib:
+            del data.attrib['nil']
+        data.text = self.data
+        form = StringIO.StringIO()
+        tree.write(form)
+        form = form.getvalue()
+
+        url = Zerigo._url_api + Host._url_create.substitute(zone_id=self.__zone._id)
+        # exact same block in Zone; we should find a way to factore this
+        try:
+            Zerigo._logger.debug('posting ' + url)
+            host = self._conn.post(url, body=form)
+        except restkit.RequestFailed as errors:
+            errors = StringIO.StringIO(errors)
+            tree = ElementTree()
+            tree.parse(errors)
+            errors = [err.text for err in tree.findall('error')]
+            raise CreateError(self.name, ', '.join(errors))
+
+        # read the id
+        tree = ElementTree()
+        tree.parse(host.body_file)
+        id = tree.find('id')
+        if id  is None or not id.text:
+            raise ParseError()
+        self._id = id.text
+        Zerigo._logger.debug('host ' + self.fqdn + ' created with id: ' + self._id)
 
     def delete(self):
         pass
