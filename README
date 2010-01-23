@@ -12,10 +12,7 @@ Requirements:
 Roadmap:
 --------
 
-0.0.1:
-    * Implement all "basic" methods.
-
-0.0.2:
+0.0.3:
     * Change the api if needed or requested;
     * Fix bugs;
     * Code refactoring.
@@ -30,6 +27,20 @@ Future:
     * Features:
         + ability to update an existing zone or host;
         + ability to control more things like ttl, priority, nameservers, etc.
+
+Changelog:
+----------
+
+0.0.2:
+    * Add license and setup.py.
+
+0.0.1:
+    * Implement all "basic" methods.
+
+License:
+--------
+
+MIT, see LICENSE
 
 Links:
 ------
