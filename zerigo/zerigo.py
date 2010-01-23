@@ -32,7 +32,7 @@ class Zerigo(object):
                                          'Content-Type': 'application/xml'})
         self._conn.add_authorization(restkit.httpc.BasicAuth(self.user, self.password))
 
-    """Return a list of Zone for this account"""
+    """Return a dictionnary of Zone with zonenames in keys for this account"""
     def list(self):
         url = Zerigo._url_api + Zerigo._url_zones
         Zerigo._logger.debug('retrieving ' + url)
@@ -44,14 +44,14 @@ class Zerigo(object):
 
         tree = ElementTree()
         tree.parse(reply.body_file)
-        list = []
+        list = {}
         zones = tree.getiterator('zone')
         for it in zones:
             name = it.find('domain')
             id = it.find('id')
-            if id is None or name is None:
+            if id is None or name is None or id.text is None or name.text is None:
                 raise ParseError()
-            list.append(Zone(name.text, id.text))
+            list[name.text] = Zone(name.text, id.text)
 
         return list
 

@@ -10,7 +10,7 @@ if __name__ == '__main__':
     account = zerigo.Zerigo()
     zones = account.list()
     if len(zones):
-        print 'Zones list:\n * ' + '\n * '.join([zone.name for zone in zones])
+        print 'Zones list:\n * ' + '\n * '.join(zones.keys())
     else:
         print 'No zones on this account.'
     zerigo.Zerigo._logger.debug('test success')
