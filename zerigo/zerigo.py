@@ -183,7 +183,8 @@ class Zone(Zerigo):
         url = Zerigo._url_api + Zone._url_delete.substitute(zone_id=self._id)
         Zerigo._logger.debug('deleting ' + url + ' (' + self.name + ')')
         # will raise an exception in case of problem. Maybe we should at least
-        # check for a 404 to be consitent by throwing a zerigo.NotFound ? :
+        # check for a 404 to be consistent by throwing a zerigo.NotFound ?
+        # And to be consistent with create which catch restkit.RequestFailed.
         self._conn.delete(url)
         self._id = None # reset the id, the zone no longer exists
 
@@ -192,6 +193,7 @@ class Host(Zerigo):
 
     _url_template = string.Template('/zones/$zone_id/hosts/new.xml')
     _url_create = string.Template('/zones/$zone_id/hosts.xml')
+    _url_delete = string.Template('/hosts/$host_id.xml')
 
     """zonename: name of the zone;
        hostname: name of the host;
@@ -284,5 +286,12 @@ class Host(Zerigo):
         self._id = id.text
         Zerigo._logger.debug('host ' + self.fqdn + ' created with id: ' + self._id)
 
+    # same block in zone but different url
     def delete(self):
-        pass
+        if self._id is None:
+            raise NotFound(self.hostname)
+
+        url = Zerigo._url_api + Host._url_delete.substitute(host_id=self._id)
+        Zerigo._logger.debug('deleting ' + url + ' (' + self.hostname + ')')
+        self._conn.delete(url)
+        self._id = None
